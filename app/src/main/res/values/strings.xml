@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">TrackUs</string>
+
+    <string name="abaLinhas">Linhas</string>
+    <string name="abaMunicipios">Municipios</string>
+
+    <string name="hintBuscar">Número da linha</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
+
+    <!-- ALERTS -->
+    <string name="nenhum_resultado">Não foram encontrados resultados na busca</string>
+    <string name="municipio_selecionado_sucesso">O município %1$s foi selecionado com sucesso.</string>
+
+    <string name="municipioAtualDet">(atual)</string>
+    <string name="title_activity_drawer">DrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="opcoes_group_menu">Opções</string>
+    <string name="alterar_municipio_menu">Alterar município</string>
+</resources>
