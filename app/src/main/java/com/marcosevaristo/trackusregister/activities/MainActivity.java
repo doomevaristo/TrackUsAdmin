@@ -19,8 +19,8 @@ import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.adapters.ViewPagerAdapter;
 import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.fragments.AbaLinhas;
-import com.marcosevaristo.trackusregister.fragments.AbaFavoritos;
-import com.marcosevaristo.trackusregister.utils.FirebaseUtils;
+import com.marcosevaristo.trackusregister.fragments.AbaMunicipios;
+import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new AbaLinhas(), getString(R.string.abaLinhas));
-        adapter.addFragment(new AbaFavoritos(), getString(R.string.abaMunicipios));
+        adapter.addFragment(new AbaMunicipios(), getString(R.string.abaMunicipios));
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(position == 0) {
                     ((AbaLinhas) adapter.getItem(position)).atualizaBusca();
                 } else if(position == 1) {
-                    ((AbaFavoritos) adapter.getItem(position)).atualizaFavoritos();
+                    ((AbaMunicipios) adapter.getItem(position)).atualizaBusca();
                 }
             }
 

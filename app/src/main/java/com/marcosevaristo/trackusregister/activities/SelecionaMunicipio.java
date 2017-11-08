@@ -20,7 +20,7 @@ import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.dto.ListaMunicipiosDTO;
 import com.marcosevaristo.trackusregister.model.Municipio;
 import com.marcosevaristo.trackusregister.utils.CollectionUtils;
-import com.marcosevaristo.trackusregister.utils.FirebaseUtils;
+import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -21,13 +21,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusregister.App;
+import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.activities.CadastroLinhaActivity;
 import com.marcosevaristo.trackusregister.adapters.LinhasAdapter;
 import com.marcosevaristo.trackusregister.adapters.NumericKeyBoardTransformationMethod;
 import com.marcosevaristo.trackusregister.dto.ListaLinhasDTO;
 import com.marcosevaristo.trackusregister.model.Linha;
 import com.marcosevaristo.trackusregister.utils.CollectionUtils;
-import com.marcosevaristo.trackusregister.utils.FirebaseUtils;
+import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.utils.StringUtils;
 
 import java.util.Map;
@@ -53,8 +54,7 @@ public class AbaLinhas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aba_linhas, container, false);
-        ultimaBusca = StringUtils.emptyString();
-        setupListLinhas(ultimaBusca);
+        setupListLinhas(StringUtils.emptyString());
         setupFloatingActionButton(view);
         return view;
     }

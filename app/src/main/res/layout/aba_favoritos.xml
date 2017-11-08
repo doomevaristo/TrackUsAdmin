@@ -5,7 +5,7 @@
     tools:context="com.marcosevaristo.trackusregister.fragments.AbaLinhas">
 
     <ListView
-        android:id="@+id/listaLinhasFavoritas"
+        android:id="@+id/listaMunicipiosBuscados"
         android:layout_marginTop="@dimen/marginTopListItens"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/listItensHeight" />

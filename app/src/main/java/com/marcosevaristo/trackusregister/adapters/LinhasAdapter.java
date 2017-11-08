@@ -46,8 +46,7 @@ public class LinhasAdapter extends ArrayAdapter<Linha> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        LinhaHolder linhaHolder = null;
-        boolean ehBusca = false;
+        LinhaHolder linhaHolder;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) App.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(layoutResId, parent, false);
@@ -55,13 +54,9 @@ public class LinhasAdapter extends ArrayAdapter<Linha> {
 
             TextView linhaBuscadaText = (TextView)view.findViewById(R.id.linhaBuscadaText);
             TextView linhaBuscadaSubText = (TextView)view.findViewById(R.id.linhaBuscadaSubText);
-            TextView linhaFavoritaText = (TextView)view.findViewById(R.id.linhaFavoritaText);
-            TextView linhaFavoritaSubText = (TextView)view.findViewById(R.id.linhaFavoritaSubText);
 
-            ehBusca = linhaBuscadaText != null;
-
-            linhaHolder.texto = linhaBuscadaText != null ? linhaBuscadaText : linhaFavoritaText;
-            linhaHolder.subTexto = linhaBuscadaSubText != null ? linhaBuscadaSubText : linhaFavoritaSubText;
+            linhaHolder.texto = linhaBuscadaText;
+            linhaHolder.subTexto = linhaBuscadaSubText;
 
             view.setTag(linhaHolder);
         } else {
@@ -72,52 +67,12 @@ public class LinhasAdapter extends ArrayAdapter<Linha> {
         if(linha != null) {
             linhaHolder.texto.setText(linha.getNumero()+" - "+linha.getTitulo());
             linhaHolder.subTexto.setText(linha.getSubtitulo());
-            if(ehBusca) {
-                linhaHolder.botaoFavorito = setupBotaoFavorito(view, position);
-            } else {
-                linhaHolder.botaoExcluir = setupBotaoExcluir(view, position);
-            }
         }
         return view;
-    }
-
-    private BotaoFavorito setupBotaoFavorito(View view, final int posicao) {
-       BotaoFavorito botaoFavorito = (BotaoFavorito) view.findViewById(R.id.botaoFavorito);
-       if(botaoFavorito != null) {
-           botaoFavorito.setFavorite(lLinhas.get(posicao).ehFavorito(), true);
-           botaoFavorito.setOnFavoriteChangeListener(new BotaoFavorito.OnFavoriteChangeListener() {
-               @Override
-               public void onFavoriteChanged(BotaoFavorito buttonView, boolean favorite) {
-                   Linha linha = lLinhas.get(posicao);
-                   linha.setEhFavorito(favorite);
-                   QueryBuilder.updateFavorito(linha);
-               }
-           });
-       }
-        return botaoFavorito;
-    }
-
-    private Button setupBotaoExcluir(View view, final int posicao) {
-        Button botaoExcluir = (Button) view.findViewById(R.id.btExcluir);
-        if(botaoExcluir != null) botaoExcluir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Linha linha = lLinhas.get(posicao);
-                linha.setEhFavorito(false);
-                QueryBuilder.updateFavorito(linha);
-                lLinhas.remove(linha);
-                Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.favorito_excluido, linha.getNumero()), Toast.LENGTH_SHORT).show();
-                notifyDataSetChanged();
-            }
-        });
-
-        return botaoExcluir;
     }
 
     private static class LinhaHolder {
         TextView texto;
         TextView subTexto;
-        BotaoFavorito botaoFavorito;
-        Button botaoExcluir;
     }
 }
