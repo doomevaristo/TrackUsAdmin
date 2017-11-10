@@ -78,10 +78,12 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu_municipio);
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add_municipio);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del_municipio);
+
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
         rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
+
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
         fabDel.setOnClickListener(this);
@@ -97,7 +99,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabAdd.setClickable(false);
             fabDel.setClickable(false);
             isFabOpen = false;
-            Log.d("Raj", "close");
 
         } else {
 
@@ -107,7 +108,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabAdd.setClickable(true);
             fabDel.setClickable(true);
             isFabOpen = true;
-            Log.d("Raj","open");
 
         }
     }

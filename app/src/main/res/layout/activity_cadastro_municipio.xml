@@ -31,7 +31,6 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="@dimen/textIdWidth"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/textDefaultSize"
             android:hint="@string/ID"
             android:id="@+id/textViewID"
             android:enabled="false"/>
@@ -59,6 +58,7 @@
     </android.support.design.widget.TextInputLayout>
     <!-- END NOME -->
 
+    <!-- START FAB -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_del_municipio"
         android:src="@drawable/ic_delete_black_24dp"
@@ -108,5 +108,5 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         app:fabSize="normal" />
-
+    <!-- END FAB -->
 </RelativeLayout>

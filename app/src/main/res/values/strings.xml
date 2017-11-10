@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrackUs</string>
+    <string name="app_name">TrackUsRegister</string>
 
     <string name="abaLinhas">Linhas</string>
     <string name="abaMunicipios">Municipios</string>
@@ -24,9 +24,11 @@
     <string name="opcoes_group_menu">Opções</string>
     <string name="alterar_municipio_menu">Alterar município</string>
     <string name="municipio_excluido_sucesso">O município %1$s foi excluído com sucesso.</string>
-    <string name="labelNome">Nome</string>
-    <string name="labelID">ID</string>
+    <string name="linha_excluida_sucesso">A linha %1$s foi excluída com sucesso.</string>
     <string name="ID">ID do registro</string>
+    <string name="etTituloLinhaHint">Título da linha</string>
+    <string name="etSubTituloLinhaHint">Subtitulo da linha</string>
     <string name="etMunicipioHint">Nome do município</string>
     <string name="titleCadastroMunicipio">Cadastro de município</string>
+    <string name="etNumeroLinhaHint">Número</string>
 </resources>
