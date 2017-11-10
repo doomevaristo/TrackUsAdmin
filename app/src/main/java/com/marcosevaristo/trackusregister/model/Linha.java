@@ -72,7 +72,7 @@ public class Linha implements Serializable {
         Linha linhaAux = new Linha();
         boolean resultadoUnico = false;
         for(String umaKeyAux : lMapLinhas.keySet()) {
-            if(lMapLinhas.get(umaKeyAux) instanceof Map) {
+            if(lMapLinhas.get(umaKeyAux) instanceof Map && !umaKeyAux.equals("carros")) {
                 Map<String, Object> umaLinha = (Map<String, Object>) lMapLinhas.get(umaKeyAux);
                 linhaAux = new Linha();
                 for(String umAttr : umaLinha.keySet()) {

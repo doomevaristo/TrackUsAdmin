@@ -9,6 +9,9 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_small_margin">24dp</dimen>
+    <dimen name="fab_margin_2">90dp</dimen>
+    <dimen name="fab_margin_3">150dp</dimen>
     <dimen name="fabDimen">56dp</dimen>
     <dimen name="search_button_height">48dp</dimen>
     <dimen name="search_button_width">48dp</dimen>
@@ -17,5 +20,11 @@
     <dimen name="etBuscaHeight">50dp</dimen>
     <dimen name="listItensHeight">480dp</dimen>
     <dimen name="marginTopListItens">110dp</dimen>
+    <dimen name="marginTopComAppBar">55dp</dimen>
     <dimen name="linhasHeight">60dp</dimen>
+
+    <dimen name="textDefaultSize">22sp</dimen>
+    <dimen name="textSmall">16sp</dimen>
+    <dimen name="etIdWidth">50dp</dimen>
+    <dimen name="textIdWidth">100dp</dimen>
 </resources>

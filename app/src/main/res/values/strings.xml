@@ -23,4 +23,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="opcoes_group_menu">Opções</string>
     <string name="alterar_municipio_menu">Alterar município</string>
+    <string name="municipio_excluido_sucesso">O município %1$s foi excluído com sucesso.</string>
+    <string name="labelNome">Nome</string>
+    <string name="labelID">ID</string>
+    <string name="ID">ID do registro</string>
+    <string name="etMunicipioHint">Nome do município</string>
+    <string name="titleCadastroMunicipio">Cadastro de município</string>
 </resources>

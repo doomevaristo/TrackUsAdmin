@@ -8,7 +8,7 @@
     tools:context="com.marcosevaristo.trackusregister.fragments.AbaLinhas">
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarAbaLinhas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -21,7 +21,7 @@
         android:layout_height="@dimen/listItensHeight" />
 
     <EditText
-        android:id="@+id/etBusca"
+        android:id="@+id/etBuscaLinhas"
         android:layout_width="@dimen/etBuscaWidth"
         android:layout_height="@dimen/etBuscaHeight"
         android:layout_marginLeft="10dp"
@@ -34,7 +34,7 @@
         />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_search"
+        android:id="@+id/fab_search_linhas"
         android:src="@drawable/ic_fab_search"
         android:layout_width="@dimen/fabDimen"
         android:layout_height="@dimen/fabDimen"

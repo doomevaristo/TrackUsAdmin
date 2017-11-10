@@ -45,10 +45,10 @@ public class SelecionaMunicipio extends AppCompatActivity {
     }
 
     private void setupListMunicipios() {
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarSelecionaMunicipio);
         progressBar.setVisibility(View.VISIBLE);
 
-        lMunicipiosView = (ListView) findViewById(R.id.listaMunicipios);
+        lMunicipiosView = (ListView) findViewById(R.id.listaMunicipiosSelecao);
         lMunicipiosView.setAdapter(null);
         lMunicipiosView.setOnItemClickListener(getOnItemClickListenerSelecionaMunicipio());
 

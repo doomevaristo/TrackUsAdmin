@@ -60,7 +60,7 @@ public class AbaLinhas extends Fragment {
     }
 
     private void setupListLinhas(String argBusca) {
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBarAbaLinhas);
         progressBar.setVisibility(View.VISIBLE);
         lView = (ListView) view.findViewById(R.id.listaLinhas);
         lView.setAdapter(null);
@@ -69,7 +69,6 @@ public class AbaLinhas extends Fragment {
         FirebaseUtils.getLinhasReference().child(argBusca).getRef().addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
 
         ultimaBusca = argBusca;
-        progressBar.setVisibility(View.GONE);
     }
 
     private ValueEventListener getEventoBuscaLinhasFirebase() {
@@ -100,7 +99,7 @@ public class AbaLinhas extends Fragment {
     }
 
     private void setupListAdapter() {
-        adapter = new LinhasAdapter(R.layout.item_da_busca, lLinhas.getlLinhas());
+        adapter = new LinhasAdapter(R.layout.linha_item, lLinhas.getlLinhas());
         adapter.notifyDataSetChanged();
         lView.setAdapter(adapter);
     }
@@ -119,14 +118,14 @@ public class AbaLinhas extends Fragment {
     }
 
     private void setupFloatingActionButton(View view) {
-         view.findViewById(R.id.fab_search).setOnClickListener(getOnClickListenerFAB());
+         view.findViewById(R.id.fab_search_linhas).setOnClickListener(getOnClickListenerFAB());
     }
 
     private View.OnClickListener getOnClickListenerFAB() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView busca = (TextView) getActivity().findViewById(R.id.etBusca);
+                TextView busca = (TextView) getActivity().findViewById(R.id.etBuscaLinhas);
                 InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if(busca.getVisibility() == View.GONE) {
                     exibeComponenteDeBusca(busca, imm);
@@ -155,9 +154,9 @@ public class AbaLinhas extends Fragment {
     }
 
     public void atualizaBusca() {
-        EditText editText = (EditText) view.findViewById(R.id.etBusca);
+        EditText editText = (EditText) view.findViewById(R.id.etBuscaLinhas);
         editText.setVisibility(View.GONE);
         editText.setText(StringUtils.emptyString());
-        setupListLinhas(ultimaBusca);
+        ///setupListLinhas(ultimaBusca);
     }
 }

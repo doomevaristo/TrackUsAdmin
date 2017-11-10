@@ -17,13 +17,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusregister.App;
 import com.marcosevaristo.trackusregister.R;
-import com.marcosevaristo.trackusregister.activities.CadastroLinhaActivity;
 import com.marcosevaristo.trackusregister.activities.CadastroMunicipioActivity;
 import com.marcosevaristo.trackusregister.adapters.MunicipiosAdapter;
 import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.dto.ListaMunicipiosDTO;
-import com.marcosevaristo.trackusregister.model.Linha;
 import com.marcosevaristo.trackusregister.model.Municipio;
 import com.marcosevaristo.trackusregister.utils.CollectionUtils;
 import com.marcosevaristo.trackusregister.utils.StringUtils;
@@ -50,22 +48,22 @@ public class AbaMunicipios extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.aba_favoritos, container, false);
+        view = inflater.inflate(R.layout.aba_municipios, container, false);
         setupListMunicipios(StringUtils.emptyString());
         return view;
     }
 
     private void setupListMunicipios(String argBusca) {
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBarAbaMunicipios);
         progressBar.setVisibility(View.VISIBLE);
 
-        lMunicipiosView = (ListView) view.findViewById(R.id.listaMunicipios);
+        lMunicipiosView = (ListView) view.findViewById(R.id.listaMunicipiosBuscados);
         lMunicipiosView.setAdapter(null);
         lMunicipiosView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
         FirebaseUtils.getMunicipiosReference().getRef().addListenerForSingleValueEvent(getEventoBuscaMunicipiosFirebase());
+
         ultimaBusca = argBusca;
-        progressBar.setVisibility(View.GONE);
     }
 
     private AdapterView.OnItemClickListener getOnItemClickListenerAbreCadastro() {
@@ -114,9 +112,9 @@ public class AbaMunicipios extends Fragment{
     }
 
     public void atualizaBusca() {
-        EditText editText = (EditText) view.findViewById(R.id.etBusca);
+        EditText editText = (EditText) view.findViewById(R.id.etBuscaMunicipios);
         editText.setVisibility(View.GONE);
         editText.setText(StringUtils.emptyString());
-        setupListMunicipios(ultimaBusca);
+        //setupListMunicipios(ultimaBusca);
     }
 }

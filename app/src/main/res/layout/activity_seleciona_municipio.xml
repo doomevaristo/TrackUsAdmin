@@ -11,17 +11,17 @@
         layout="@layout/toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:id="@+id/toolbar_inc"/>
+        android:id="@+id/toolbar_inc"/>a
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarSelecionaMunicipio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
     <ListView
-        android:id="@+id/listaMunicipios"
+        android:id="@+id/listaMunicipiosSelecao"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/listItensHeight" />
