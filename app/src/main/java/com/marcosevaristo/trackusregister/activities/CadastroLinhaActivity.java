@@ -5,21 +5,27 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.marcosevaristo.trackusregister.App;
 import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.model.Linha;
+import com.marcosevaristo.trackusregister.model.Municipio;
 
-public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener{
+public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
     private FloatingActionButton fabMenu,fabAdd,fabDel;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private GoogleMap gMap;
 
     private Toolbar toolbar;
     private Linha linha;
@@ -37,6 +43,14 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         } else {
             novo();
         }
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    private void setupSpinnerMunicipios() {
+        Spinner spinnerMunicipios = (Spinner) findViewById(R.id.spinnerMunicipioLinha);
+        spinnerMunicipios.setOnItemSelectedListener(this);
+
     }
 
     private void setupLinhaNaTela(){
@@ -70,25 +84,20 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     }
 
     public void animateFAB(){
-
         if(isFabOpen){
-
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
             fabAdd.setClickable(false);
             fabDel.setClickable(false);
             isFabOpen = false;
-
         } else {
-
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
             fabDel.startAnimation(fab_open);
             fabAdd.setClickable(true);
             fabDel.setClickable(true);
             isFabOpen = true;
-
         }
     }
 
@@ -97,16 +106,15 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         int id = v.getId();
         switch (id){
             case R.id.fab_menu_linha:
-
                 animateFAB();
                 break;
             case R.id.fab_add_linha:
+                novo();
 
-                Log.d("Raj", "Fab 1");
                 break;
             case R.id.fab_del_linha:
-
-                Log.d("Raj", "Fab 2");
+                //TODO: pedir confirmação
+                exclui();
                 break;
         }
     }
@@ -128,5 +136,31 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.linha_excluida_sucesso,
                 linha.getNumero()+" - "+linha.getTitulo()), Toast.LENGTH_SHORT).show();
         novo();
+    }
+
+    @Override
+    public void limpa() {
+
+    }
+
+    @Override
+    public void salva() {
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        linha.setMunicipio((Municipio) parent.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        linha.setMunicipio(null);
     }
 }

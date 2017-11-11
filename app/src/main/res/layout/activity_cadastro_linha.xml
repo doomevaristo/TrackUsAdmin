@@ -78,9 +78,23 @@
     </android.support.design.widget.TextInputLayout>
     <!-- END SUBTITULO -->
 
-    <!-- START ROTA -->
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerMunicipioLinha"
+        android:prompt="@string/spinner_title"
+        android:layout_below="@+id/textLayoutSubtituloLinha"
+        />
 
-    <!-- END ROTA -->
+    <!-- START MAP -->
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.marcosevaristo.trackusregister.activities.CadastroLinhaActivity" />
+    <!-- END MAP -->
 
     <!-- START FAB -->
     <android.support.design.widget.FloatingActionButton

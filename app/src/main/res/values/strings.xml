@@ -31,4 +31,5 @@
     <string name="etMunicipioHint">Nome do município</string>
     <string name="titleCadastroMunicipio">Cadastro de município</string>
     <string name="etNumeroLinhaHint">Número</string>
+    <string name="spinner_title">Município</string>
 </resources>
