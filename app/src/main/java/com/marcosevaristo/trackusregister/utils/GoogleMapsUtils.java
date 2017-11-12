@@ -24,6 +24,7 @@ public class GoogleMapsUtils  {
             polylineOpt.add(latlng);
         }
         polylineOpt.color(Color.BLUE);
+        polylineOpt.width(10);
 
         return polylineOpt;
     }
