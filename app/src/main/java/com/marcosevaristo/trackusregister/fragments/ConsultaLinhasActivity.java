@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,7 @@ import com.marcosevaristo.trackusregister.adapters.LinhasAdapter;
 import com.marcosevaristo.trackusregister.adapters.NumericKeyBoardTransformationMethod;
 import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.model.Linha;
-import com.marcosevaristo.trackusregister.utils.CollectionUtils;
+import com.marcosevaristo.trackusregister.model.Municipio;
 import com.marcosevaristo.trackusregister.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -35,38 +35,36 @@ import java.util.List;
 import java.util.Map;
 
 
-public class AbaLinhas extends Fragment {
+public class ConsultaLinhasActivity extends AppCompatActivity {
 
-    private View view;
     private ListView lView;
     private LinhasAdapter adapter;
+    private Municipio municipio;
     private List<Linha> lLinhas;
     private ProgressBar progressBar;
 
-    public AbaLinhas() {}
+    public ConsultaLinhasActivity() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.activity_consulta_linhas);
+        Bundle bundle = getIntent().getExtras();
+        municipio = (Municipio) bundle.get("municipio");
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.aba_linhas, container, false);
         setupListLinhas(StringUtils.emptyString());
-        setupFloatingActionButton(view);
-        return view;
+        setupFloatingActionButton();
     }
 
     private void setupListLinhas(String argBusca) {
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBarAbaLinhas);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarAbaLinhas);
         progressBar.setVisibility(View.VISIBLE);
-        lView = (ListView) view.findViewById(R.id.listaLinhas);
+        lView = (ListView) findViewById(R.id.listaLinhas);
         lView.setAdapter(null);
         lView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
-        FirebaseUtils.getLinhasReference().child(argBusca).getRef().addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
+        FirebaseUtils.getLinhasReference(municipio.getId(), argBusca).getRef()
+                .addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
     }
 
     private ValueEventListener getEventoBuscaLinhasFirebase() {
@@ -92,7 +90,7 @@ public class AbaLinhas extends Fragment {
     }
 
     private void setupListAdapter() {
-        adapter = new LinhasAdapter(R.layout.linha_item, lLinhas.getlLinhas());
+        adapter = new LinhasAdapter(R.layout.linha_item, lLinhas);
         adapter.notifyDataSetChanged();
         lView.setAdapter(adapter);
     }
@@ -110,15 +108,15 @@ public class AbaLinhas extends Fragment {
         };
     }
 
-    private void setupFloatingActionButton(View view) {
-         view.findViewById(R.id.fab_search_linhas).setOnClickListener(getOnClickListenerFAB());
+    private void setupFloatingActionButton() {
+         findViewById(R.id.fab_search_linhas).setOnClickListener(getOnClickListenerFAB());
     }
 
     private View.OnClickListener getOnClickListenerFAB() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView busca = (TextView) getActivity().findViewById(R.id.etBuscaLinhas);
+                TextView busca = (TextView) findViewById(R.id.etBuscaLinhas);
                 InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if(busca.getVisibility() == View.GONE) {
                     exibeComponenteDeBusca(busca, imm);
@@ -144,11 +142,5 @@ public class AbaLinhas extends Fragment {
                 imm.hideSoftInputFromWindow(busca.getWindowToken(), 0);
             }
         };
-    }
-
-    public void atualizaBusca() {
-        EditText editText = (EditText) view.findViewById(R.id.etBuscaLinhas);
-        editText.setVisibility(View.GONE);
-        editText.setText(StringUtils.emptyString());
     }
 }

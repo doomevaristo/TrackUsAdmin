@@ -59,7 +59,7 @@ public class AbaMunicipios extends Fragment{
         lMunicipiosView.setAdapter(null);
         lMunicipiosView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
-        FirebaseUtils.getMunicipiosReference().getRef().addListenerForSingleValueEvent(getEventoBuscaMunicipiosFirebase());
+        FirebaseUtils.getMunicipiosReference(null).getRef().addListenerForSingleValueEvent(getEventoBuscaMunicipiosFirebase());
 
         ultimaBusca = argBusca;
     }

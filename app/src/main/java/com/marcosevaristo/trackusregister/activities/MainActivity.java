@@ -9,8 +9,6 @@ import android.support.v7.widget.Toolbar;
 
 import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.adapters.ViewPagerAdapter;
-import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
-import com.marcosevaristo.trackusregister.fragments.AbaLinhas;
 import com.marcosevaristo.trackusregister.fragments.AbaMunicipios;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,13 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupTabLayout() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.abaLinhas));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.abaMunicipios));
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AbaLinhas(), getString(R.string.abaLinhas));
         adapter.addFragment(new AbaMunicipios(), getString(R.string.abaMunicipios));
         viewPager.setAdapter(adapter);
 
@@ -63,11 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 0) {
-                    ((AbaLinhas) adapter.getItem(position)).atualizaBusca();
-                } else if(position == 1) {
-                    ((AbaMunicipios) adapter.getItem(position)).atualizaBusca();
-                }
+                ((AbaMunicipios) adapter.getItem(position)).atualizaBusca();
             }
 
             @Override
