@@ -27,4 +27,6 @@
     <dimen name="textSmall">16sp</dimen>
     <dimen name="etIdWidth">50dp</dimen>
     <dimen name="textIdWidth">100dp</dimen>
+    <dimen name="mapLinhaHeight">410dp</dimen>
+    <dimen name="fieldDefaultPadding">10dp</dimen>
 </resources>

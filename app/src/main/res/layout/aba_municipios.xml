@@ -22,7 +22,7 @@
         android:id="@+id/etBuscaMunicipios"
         android:layout_width="@dimen/etBuscaWidth"
         android:layout_height="@dimen/etBuscaHeight"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/fieldDefaultPadding"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         android:focusable="true"

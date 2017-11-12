@@ -1,5 +1,8 @@
 package com.marcosevaristo.trackusregister.activities;
 
+import android.app.ProgressDialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -12,22 +15,45 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.marcosevaristo.trackusregister.App;
 import com.marcosevaristo.trackusregister.R;
+import com.marcosevaristo.trackusregister.adapters.MunicipiosAdapter;
+import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.model.Linha;
 import com.marcosevaristo.trackusregister.model.Municipio;
+import com.marcosevaristo.trackusregister.utils.CollectionUtils;
+import com.marcosevaristo.trackusregister.utils.GoogleMapsUtils;
+import com.marcosevaristo.trackusregister.utils.MapDirectionsParser;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
     private FloatingActionButton fabMenu,fabAdd,fabDel;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
+    private List<Marker> markers;
+    private Polyline rota;
+    private ProgressDialog progressDialog;
 
-    private Toolbar toolbar;
     private Linha linha;
 
     @Override
@@ -37,6 +63,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
         setupToolbar();
         setupFloatingActionButtons();
+        setupSpinnerMunicipios();
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
             edita(bundle);
@@ -51,6 +78,19 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         Spinner spinnerMunicipios = (Spinner) findViewById(R.id.spinnerMunicipioLinha);
         spinnerMunicipios.setOnItemSelectedListener(this);
 
+        List<Municipio> lMunicipios = QueryBuilder.getMunicipios(null);
+        MunicipiosAdapter adapter = new MunicipiosAdapter(R.layout.municipio_item, lMunicipios);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMunicipios.setAdapter(adapter);
+
+        if(linha != null && linha.getMunicipio() != null) {
+            for(int i = 0; i < lMunicipios.size(); i++) {
+                if(lMunicipios.get(i).getId().equals(linha.getMunicipio().getId())) {
+                    spinnerMunicipios.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void setupLinhaNaTela(){
@@ -64,8 +104,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
 
     private void setupFloatingActionButtons() {
@@ -152,15 +191,135 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
 
+        if(linha.getMunicipio() != null && Geocoder.isPresent()) {
+            setupLocationsOnMap();
+        }
+
+        gMap.setOnMapClickListener(getOnMapClickListenerAddMarker());
+    }
+
+    private void setupLocationsOnMap() {
+        try {
+            Geocoder gc = new Geocoder(this);
+            List<Address> addresses = gc.getFromLocationName(linha.getMunicipio().getNome(), 5);
+
+            if(CollectionUtils.isNotEmpty(addresses)) {
+                StringBuilder sbTitle;
+                LatLng latLngAux = null;
+                for(Address a : addresses){
+                    if(a.hasLatitude() && a.hasLongitude()){
+                        MarkerOptions marker = new MarkerOptions();
+                        latLngAux = new LatLng(a.getLatitude(), a.getLongitude());
+                        marker.position(latLngAux);
+                        sbTitle = new StringBuilder();
+                        sbTitle.append(a.getLocality()).append(" - ");
+                        sbTitle.append(a.getAdminArea()).append(" (");
+                        sbTitle.append(a.getCountryCode()).append(")");
+
+                        marker.title(sbTitle.toString());
+                        gMap.addMarker(marker);
+                    }
+                    if(latLngAux != null) {
+                        gMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                        gMap.animateCamera(CameraUpdateFactory.newLatLng(latLngAux));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.nao_achou_municipio_no_mapa, linha.getMunicipio().getNome()), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private GoogleMap.OnMapClickListener getOnMapClickListenerAddMarker() {
+        return new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng point) {
+                MarkerOptions markerOptions = new MarkerOptions().position(point);
+                if(CollectionUtils.isEmpty(markers)) {
+                    gMap.clear();
+                    markers = new ArrayList<>();
+                } else if(CollectionUtils.isNotEmpty(markers) && markers.size() == 2) {
+                    markers.get(0).remove();
+                }
+
+                Marker markerAux = gMap.addMarker(markerOptions);
+                if(CollectionUtils.isNotEmpty(markers) && markers.size() == 2) {
+                    markers.set(0, markers.get(1));
+                    markers.set(1, markerAux);
+
+                    traceRoute(markers.get(0).getPosition(), markers.get(1).getPosition());
+                } else if(markers != null && markers.size() < 2) {
+                    markers.add(markerAux);
+                }
+            }
+        };
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        linha.setMunicipio((Municipio) parent.getItemAtPosition(position));
+        int componenteId = view.getId();
+        switch (componenteId) {
+            case R.id.spinnerMunicipioLinha:
+                linha.setMunicipio((Municipio) parent.getItemAtPosition(position));
+                break;
+        }
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         linha.setMunicipio(null);
+    }
+
+    private void traceRoute(LatLng srcLatLng, LatLng destLatLng) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.show();
+
+        String srcParam = srcLatLng.latitude + "," + srcLatLng.longitude;
+        String destParam = destLatLng.latitude + "," + destLatLng.longitude;
+
+        String url = GoogleMapsUtils.getUrlSearchRoute(srcParam, destParam);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        MapDirectionsParser parser = MapDirectionsParser.getInstance();
+                        List<List<HashMap<String, String>>> routes = parser.parse(response);
+                        ArrayList<LatLng> points = null;
+
+                        for (int i = 0; i < routes.size(); i++) {
+                            points = new ArrayList<>();
+                            List<HashMap<String, String>> path = routes.get(i);
+
+                            for (int j = 0; j < path.size(); j++) {
+                                HashMap<String, String> point = path.get(j);
+
+                                double lat = Double.parseDouble(point.get("lat"));
+                                double lng = Double.parseDouble(point.get("lng"));
+                                LatLng position = new LatLng(lat, lng);
+
+                                points.add(position);
+                            }
+                        }
+
+                        if(rota != null) {
+                            rota.remove();
+                        }
+                        rota = gMap.addPolyline(GoogleMapsUtils.desenhaRota(points));
+                        progressDialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
+        App.addToReqQueue(jsonObjectRequest);
     }
 }

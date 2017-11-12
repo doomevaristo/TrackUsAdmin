@@ -32,4 +32,6 @@
     <string name="titleCadastroMunicipio">Cadastro de município</string>
     <string name="etNumeroLinhaHint">Número</string>
     <string name="spinner_title">Município</string>
+    <string name="textLabelMapaLinha">Rota</string>
+    <string name="nao_achou_municipio_no_mapa">Não foi possível encontrar o município %1$s no mapa.</string>
 </resources>

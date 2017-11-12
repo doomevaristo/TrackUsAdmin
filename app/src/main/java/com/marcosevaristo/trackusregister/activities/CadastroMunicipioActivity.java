@@ -66,6 +66,16 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         novo();
     }
 
+    @Override
+    public void limpa() {
+
+    }
+
+    @Override
+    public void salva() {
+
+    }
+
     private void setaMunicipioEmTela(Municipio municipio) {
         EditText textViewID = (EditText) findViewById(R.id.textViewID);
         TextInputEditText etNome = (TextInputEditText) findViewById(R.id.etNomeMunicipio);
