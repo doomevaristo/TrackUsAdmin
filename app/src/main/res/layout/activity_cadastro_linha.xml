@@ -109,6 +109,26 @@
     <!-- END MAP -->
 
     <!-- START FAB -->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_clear_map"
+        android:src="@drawable/ic_restore_black_24dp"
+        android:backgroundTint="@color/greyButtons"
+        android:foregroundTint="@android:color/transparent"
+        android:layout_width="@dimen/fabDimen"
+        android:layout_height="@dimen/fabDimen"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/fab_small_margin"
+        android:layout_marginEnd="@dimen/fab_small_margin"
+        android:layout_marginBottom="@dimen/fab_margin_4"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_gravity="bottom|end"
+        app:fabSize="mini"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_del_linha"
         android:src="@drawable/ic_delete_black_24dp"

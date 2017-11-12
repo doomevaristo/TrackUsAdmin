@@ -26,11 +26,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusregister.App;
 import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.adapters.MunicipiosAdapter;
-import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.model.Linha;
 import com.marcosevaristo.trackusregister.model.Municipio;
@@ -44,15 +45,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
-    private FloatingActionButton fabMenu,fabAdd,fabDel;
+    private TextInputEditText etNumero, etTituloLinha, etSubtituloLinha;
+    private Spinner spinnerMunicipios;
+    private FloatingActionButton fabMenu,fabAdd,fabDel,fabClr;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
+
     private List<Marker> markers;
-    private Polyline rota;
+    private ArrayList<LatLng> points;
     private ProgressDialog progressDialog;
+    private List<Municipio> lMunicipios;
 
     private Linha linha;
 
@@ -75,10 +81,33 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     }
 
     private void setupSpinnerMunicipios() {
-        Spinner spinnerMunicipios = (Spinner) findViewById(R.id.spinnerMunicipioLinha);
+        spinnerMunicipios = (Spinner) findViewById(R.id.spinnerMunicipioLinha);
         spinnerMunicipios.setOnItemSelectedListener(this);
+        FirebaseUtils.getMunicipiosReference(null).getRef().addListenerForSingleValueEvent(getEventoBuscaMunicipiosFirebase());
+    }
 
-        List<Municipio> lMunicipios = QueryBuilder.getMunicipios(null);
+    private ValueEventListener getEventoBuscaMunicipiosFirebase() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Map<String, Object>> lMapValues = (List<Map<String, Object>>) dataSnapshot.getValue();
+                if (lMapValues != null) {
+                    lMunicipios = new ArrayList<>();
+                    lMunicipios.addAll(Municipio.converteListMapParaListaMunicipios(lMapValues));
+                    setupMunicipiosAdapter();
+                } else {
+                    Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+    }
+
+    private void setupMunicipiosAdapter() {
         MunicipiosAdapter adapter = new MunicipiosAdapter(R.layout.municipio_item, lMunicipios);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMunicipios.setAdapter(adapter);
@@ -94,9 +123,9 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     }
 
     private void setupLinhaNaTela(){
-        TextInputEditText etNumero = (TextInputEditText) findViewById(R.id.etNumeroLinha);
-        TextInputEditText etTituloLinha = (TextInputEditText) findViewById(R.id.etTituloLinha);
-        TextInputEditText etSubtituloLinha = (TextInputEditText) findViewById(R.id.etSubtituloLinha);
+        if(etNumero == null) etNumero = (TextInputEditText) findViewById(R.id.etNumeroLinha);
+        if(etTituloLinha == null) etTituloLinha = (TextInputEditText) findViewById(R.id.etTituloLinha);
+        if(etSubtituloLinha == null) etSubtituloLinha = (TextInputEditText) findViewById(R.id.etSubtituloLinha);
 
         etNumero.setText(linha != null ? linha.getNumero() : null);
         etTituloLinha.setText(linha != null ? linha.getTitulo() : null);
@@ -111,6 +140,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu_linha);
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add_linha);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del_linha);
+        fabClr = (FloatingActionButton)findViewById(R.id.fab_clear_map);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
@@ -120,22 +150,30 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
         fabDel.setOnClickListener(this);
+        fabClr.setOnClickListener(this);
     }
 
     public void animateFAB(){
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
+
             fabAdd.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
+            fabClr.startAnimation(fab_close);
             fabAdd.setClickable(false);
             fabDel.setClickable(false);
+            fabClr.setClickable(false);
+
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
+
             fabAdd.startAnimation(fab_open);
             fabDel.startAnimation(fab_open);
+            fabClr.startAnimation(fab_open);
             fabAdd.setClickable(true);
             fabDel.setClickable(true);
+            fabClr.setClickable(true);
             isFabOpen = true;
         }
     }
@@ -149,11 +187,16 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                 break;
             case R.id.fab_add_linha:
                 novo();
-
+                animateFAB();
                 break;
             case R.id.fab_del_linha:
                 //TODO: pedir confirmação
                 exclui();
+                animateFAB();
+                break;
+            case R.id.fab_clear_map:
+                clearMap();
+                animateFAB();
                 break;
         }
     }
@@ -161,6 +204,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     @Override
     public void novo() {
         linha = new Linha();
+        setupLinhaNaTela();
     }
 
     @Override
@@ -171,15 +215,11 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
     @Override
     public void exclui() {
-        FirebaseUtils.getLinhasReference().child(linha.getNumero()).getRef().removeValue();
+        //TODO: verificar se está gravado antes de excluir para chamar só o novo()
+        FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getNumero()).getRef().removeValue();
         Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.linha_excluida_sucesso,
                 linha.getNumero()+" - "+linha.getTitulo()), Toast.LENGTH_SHORT).show();
         novo();
-    }
-
-    @Override
-    public void limpa() {
-
     }
 
     @Override
@@ -201,27 +241,13 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     private void setupLocationsOnMap() {
         try {
             Geocoder gc = new Geocoder(this);
-            List<Address> addresses = gc.getFromLocationName(linha.getMunicipio().getNome(), 5);
+            List<Address> addresses = gc.getFromLocationName(linha.getMunicipio().getNome(), 1);
 
             if(CollectionUtils.isNotEmpty(addresses)) {
-                StringBuilder sbTitle;
-                LatLng latLngAux = null;
                 for(Address a : addresses){
                     if(a.hasLatitude() && a.hasLongitude()){
-                        MarkerOptions marker = new MarkerOptions();
-                        latLngAux = new LatLng(a.getLatitude(), a.getLongitude());
-                        marker.position(latLngAux);
-                        sbTitle = new StringBuilder();
-                        sbTitle.append(a.getLocality()).append(" - ");
-                        sbTitle.append(a.getAdminArea()).append(" (");
-                        sbTitle.append(a.getCountryCode()).append(")");
-
-                        marker.title(sbTitle.toString());
-                        gMap.addMarker(marker);
-                    }
-                    if(latLngAux != null) {
                         gMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                        gMap.animateCamera(CameraUpdateFactory.newLatLng(latLngAux));
+                        gMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(a.getLatitude(), a.getLongitude())));
                     }
                 }
             }
@@ -236,21 +262,14 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             @Override
             public void onMapClick(LatLng point) {
                 MarkerOptions markerOptions = new MarkerOptions().position(point);
-                if(CollectionUtils.isEmpty(markers)) {
-                    gMap.clear();
+                if(markers == null) {
                     markers = new ArrayList<>();
-                } else if(CollectionUtils.isNotEmpty(markers) && markers.size() == 2) {
-                    markers.get(0).remove();
                 }
 
-                Marker markerAux = gMap.addMarker(markerOptions);
-                if(CollectionUtils.isNotEmpty(markers) && markers.size() == 2) {
-                    markers.set(0, markers.get(1));
-                    markers.set(1, markerAux);
-
-                    traceRoute(markers.get(0).getPosition(), markers.get(1).getPosition());
-                } else if(markers != null && markers.size() < 2) {
-                    markers.add(markerAux);
+                Marker lastMarker = gMap.addMarker(markerOptions);
+                markers.add(lastMarker);
+                if(markers.size() > 1) {
+                    traceRoute(lastMarker);
                 }
             }
         };
@@ -272,54 +291,58 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         linha.setMunicipio(null);
     }
 
-    private void traceRoute(LatLng srcLatLng, LatLng destLatLng) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
-        progressDialog.show();
+    private void traceRoute(Marker lastMarker) {
+        if(CollectionUtils.isNotEmpty(markers)) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(App.getAppContext().getString(R.string.carregando));
+            progressDialog.show();
 
-        String srcParam = srcLatLng.latitude + "," + srcLatLng.longitude;
-        String destParam = destLatLng.latitude + "," + destLatLng.longitude;
+            for(Marker umMarker : markers) {
+                if(points == null) points = new ArrayList<>();
+                if(umMarker.equals(lastMarker)) {
+                    String srcParam = GoogleMapsUtils.getLatLngToString(markers.get(markers.indexOf(umMarker)-1).getPosition());
+                    String destParam = GoogleMapsUtils.getLatLngToString(umMarker.getPosition());
+                    String urlRequestRoute = GoogleMapsUtils.getUrlSearchRoute(srcParam, destParam);
 
-        String url = GoogleMapsUtils.getUrlSearchRoute(srcParam, destParam);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlRequestRoute, null,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    MapDirectionsParser parser = new MapDirectionsParser();
+                                    List<List<HashMap<String, String>>> routes = parser.parse(response);
+                                    LatLng position = null;
+                                    for (int i = 0; i < routes.size(); i++) {
+                                        List<HashMap<String, String>> path = routes.get(i);
+                                        for (int j = 0; j < path.size(); j++) {
+                                            HashMap<String, String> point = path.get(j);
 
-                        MapDirectionsParser parser = MapDirectionsParser.getInstance();
-                        List<List<HashMap<String, String>>> routes = parser.parse(response);
-                        ArrayList<LatLng> points = null;
+                                            double lat = Double.parseDouble(point.get("lat"));
+                                            double lng = Double.parseDouble(point.get("lng"));
+                                            position = new LatLng(lat, lng);
 
-                        for (int i = 0; i < routes.size(); i++) {
-                            points = new ArrayList<>();
-                            List<HashMap<String, String>> path = routes.get(i);
+                                            points.add(position);
+                                        }
+                                    }
+                                    gMap.addPolyline(GoogleMapsUtils.desenhaRota(points));
+                                    points.clear();
+                                    progressDialog.dismiss();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
+                                }
+                            });
+                    App.addToReqQueue(jsonObjectRequest);
+                }
+            }
+        }
+    }
 
-                            for (int j = 0; j < path.size(); j++) {
-                                HashMap<String, String> point = path.get(j);
-
-                                double lat = Double.parseDouble(point.get("lat"));
-                                double lng = Double.parseDouble(point.get("lng"));
-                                LatLng position = new LatLng(lat, lng);
-
-                                points.add(position);
-                            }
-                        }
-
-                        if(rota != null) {
-                            rota.remove();
-                        }
-                        rota = gMap.addPolyline(GoogleMapsUtils.desenhaRota(points));
-                        progressDialog.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
-
-        App.addToReqQueue(jsonObjectRequest);
+    private void clearMap() {
+        gMap.clear();
+        if(CollectionUtils.isNotEmpty(points)) points.clear();
+        if(CollectionUtils.isNotEmpty(markers)) markers.clear();
     }
 }

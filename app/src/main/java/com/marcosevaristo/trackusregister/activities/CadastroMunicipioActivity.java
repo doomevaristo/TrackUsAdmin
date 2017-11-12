@@ -24,7 +24,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     private FloatingActionButton fabMenu,fabAdd,fabDel;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
 
-    private Toolbar toolbar;
     private Municipio municipio;
 
     @Override
@@ -42,8 +41,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
     }
 
     @Override
@@ -61,14 +59,9 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
     @Override
     public void exclui() {
-        FirebaseUtils.getMunicipiosReference().child(municipio.getId().toString()).getRef().removeValue();
+        FirebaseUtils.getMunicipiosReference(municipio.getId()).getRef().removeValue();
         Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.municipio_excluido_sucesso, municipio.getId().toString()), Toast.LENGTH_SHORT).show();
         novo();
-    }
-
-    @Override
-    public void limpa() {
-
     }
 
     @Override
@@ -100,7 +93,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     }
 
     public void animateFAB(){
-
         if(isFabOpen){
 
             fabMenu.startAnimation(rotate_backward);
@@ -114,9 +106,9 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
-            fabDel.startAnimation(fab_open);
+            if(municipio != null && municipio.getId() != null) fabDel.startAnimation(fab_open);
             fabAdd.setClickable(true);
-            fabDel.setClickable(true);
+            if(municipio != null && municipio.getId() != null) fabDel.setClickable(true);
             isFabOpen = true;
 
         }
@@ -127,7 +119,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         int id = v.getId();
         switch (id){
             case R.id.fab_menu_municipio:
-
                 animateFAB();
                 break;
             case R.id.fab_add_municipio:

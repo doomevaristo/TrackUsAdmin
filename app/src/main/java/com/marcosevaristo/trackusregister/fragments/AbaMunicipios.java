@@ -19,13 +19,11 @@ import com.marcosevaristo.trackusregister.App;
 import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.activities.CadastroMunicipioActivity;
 import com.marcosevaristo.trackusregister.adapters.MunicipiosAdapter;
-import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
-import com.marcosevaristo.trackusregister.dto.ListaMunicipiosDTO;
 import com.marcosevaristo.trackusregister.model.Municipio;
-import com.marcosevaristo.trackusregister.utils.CollectionUtils;
 import com.marcosevaristo.trackusregister.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +34,7 @@ public class AbaMunicipios extends Fragment{
     private MunicipiosAdapter adapter;
     private ProgressBar progressBar;
     private String ultimaBusca;
-    private ListaMunicipiosDTO lMunicipios = new ListaMunicipiosDTO();
+    private List<Municipio> lMunicipios;
 
     public AbaMunicipios() {}
 
@@ -85,11 +83,8 @@ public class AbaMunicipios extends Fragment{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Map<String, Object>> lMapValues = (List<Map<String, Object>>) dataSnapshot.getValue();
                 if (lMapValues != null) {
-                    lMunicipios = new ListaMunicipiosDTO();
-                    lMunicipios.addMunicipios(Municipio.converteListMapParaListaMunicipios(lMapValues));
-                    if(CollectionUtils.isNotEmpty(lMunicipios.getlMunicipios())) {
-                        QueryBuilder.insereMunicipios(lMunicipios.getlMunicipios());
-                    }
+                    lMunicipios = new ArrayList<>();
+                    lMunicipios.addAll(Municipio.converteListMapParaListaMunicipios(lMapValues));
                     setupListAdapter();
                 } else {
                     Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
@@ -105,7 +100,7 @@ public class AbaMunicipios extends Fragment{
     }
 
     private void setupListAdapter() {
-        adapter = new MunicipiosAdapter(R.layout.municipio_item, lMunicipios.getlMunicipios());
+        adapter = new MunicipiosAdapter(R.layout.municipio_item, lMunicipios);
         adapter.notifyDataSetChanged();
         lMunicipiosView.setAdapter(adapter);
         progressBar.setVisibility(View.GONE);
@@ -115,6 +110,5 @@ public class AbaMunicipios extends Fragment{
         EditText editText = (EditText) view.findViewById(R.id.etBuscaMunicipios);
         editText.setVisibility(View.GONE);
         editText.setText(StringUtils.emptyString());
-        //setupListMunicipios(ultimaBusca);
     }
 }

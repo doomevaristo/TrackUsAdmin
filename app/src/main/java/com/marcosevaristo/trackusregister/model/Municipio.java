@@ -12,7 +12,6 @@ public class Municipio implements Serializable {
     private String nome;
     private List<Linha> lLinhas;
     private boolean ehMunicipioAtual;
-    private boolean selecionado = false;
 
     public Municipio(){}
 
@@ -53,14 +52,6 @@ public class Municipio implements Serializable {
 
     public void setEhMunicipioAtual(boolean ehMunicipioAtual) {
         this.ehMunicipioAtual = ehMunicipioAtual;
-    }
-
-    public boolean isSelecionado() {
-        return selecionado;
-    }
-
-    public void setSelecionado(boolean selecionado) {
-        this.selecionado = selecionado;
     }
 
     @Override

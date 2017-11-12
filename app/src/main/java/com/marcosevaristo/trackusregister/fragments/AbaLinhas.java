@@ -25,12 +25,13 @@ import com.marcosevaristo.trackusregister.R;
 import com.marcosevaristo.trackusregister.activities.CadastroLinhaActivity;
 import com.marcosevaristo.trackusregister.adapters.LinhasAdapter;
 import com.marcosevaristo.trackusregister.adapters.NumericKeyBoardTransformationMethod;
-import com.marcosevaristo.trackusregister.dto.ListaLinhasDTO;
+import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.model.Linha;
 import com.marcosevaristo.trackusregister.utils.CollectionUtils;
-import com.marcosevaristo.trackusregister.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusregister.utils.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,9 +40,8 @@ public class AbaLinhas extends Fragment {
     private View view;
     private ListView lView;
     private LinhasAdapter adapter;
-    private ListaLinhasDTO lLinhas = new ListaLinhasDTO();
+    private List<Linha> lLinhas;
     private ProgressBar progressBar;
-    private String ultimaBusca;
 
     public AbaLinhas() {}
 
@@ -67,8 +67,6 @@ public class AbaLinhas extends Fragment {
         lView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
         FirebaseUtils.getLinhasReference().child(argBusca).getRef().addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
-
-        ultimaBusca = argBusca;
     }
 
     private ValueEventListener getEventoBuscaLinhasFirebase() {
@@ -77,13 +75,8 @@ public class AbaLinhas extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
                 if (mapValues != null) {
-                    lLinhas = new ListaLinhasDTO();
-                    lLinhas.addLinhas(Linha.converteMapParaListaLinhas(mapValues));
-                    if(CollectionUtils.isNotEmpty(lLinhas.getlLinhas())) {
-                        for(Linha umaLinha : lLinhas.getlLinhas()) {
-                            umaLinha.setMunicipio(App.getMunicipio());
-                        }
-                    }
+                    lLinhas = new ArrayList<>();
+                    lLinhas.addAll(Linha.converteMapParaListaLinhas(mapValues));
                     setupListAdapter();
                 } else {
                     Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
@@ -157,6 +150,5 @@ public class AbaLinhas extends Fragment {
         EditText editText = (EditText) view.findViewById(R.id.etBuscaLinhas);
         editText.setVisibility(View.GONE);
         editText.setText(StringUtils.emptyString());
-        ///setupListLinhas(ultimaBusca);
     }
 }

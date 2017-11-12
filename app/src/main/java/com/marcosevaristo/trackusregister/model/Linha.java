@@ -2,37 +2,19 @@ package com.marcosevaristo.trackusregister.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class Linha implements Serializable {
-    private Long idSql;
     private Municipio municipio;
     private String numero;
     private String titulo;
     private String subtitulo;
-    private List<Carro> carros;
     private boolean ehFavorito = false;
 
     private static final long serialVersionUID = 1L;
 
     public Linha() {
-    }
-
-    public Linha(List<Carro> carros, String numero, String titulo, String subtitulo) {
-        this.carros = carros;
-        this.numero = numero;
-        this.titulo = titulo;
-        this.subtitulo = subtitulo;
-    }
-
-    public Long getIdSql() {
-        return idSql;
-    }
-
-    public void setIdSql(Long idSql) {
-        this.idSql = idSql;
     }
 
     public String getNumero() {
@@ -57,14 +39,6 @@ public class Linha implements Serializable {
 
     public void setSubtitulo(String subtitulo) {
         this.subtitulo = subtitulo;
-    }
-
-    public List<Carro> getCarros() {
-        return carros;
-    }
-
-    public void setCarros(List<Carro> carros) {
-        this.carros = carros;
     }
 
     public static List<Linha> converteMapParaListaLinhas(Map<String, Object> lMapLinhas) {
@@ -99,33 +73,20 @@ public class Linha implements Serializable {
             case "subtitulo":
                 linhaAux.setSubtitulo(valor.toString());
                 break;
-            case "carros":
-                Collection<Map> mapCarros = ((Map) valor).values();
-                List<Carro> lCarrosAux = new ArrayList<>();
-                for(Map umCarroMap : mapCarros) {
-                    Carro carroAux = new Carro();
-                    for(Object umKey : umCarroMap.keySet()) {
-                        String umKeyStr = umKey.toString();
-                        switch (umKeyStr) {
-                            case "location":
-                                carroAux.setLocation(umCarroMap.get(umKey).toString());
-                                break;
-                            case "latitude":
-                                carroAux.setLatitude(umCarroMap.get(umKey).toString());
-                                break;
-                            case "longitude":
-                                carroAux.setLongitude(umCarroMap.get(umKey).toString());
-                                break;
-                            case "id":
-                                carroAux.setId(umCarroMap.get(umKey).toString());
-                                break;
-                            default:
-                                break;
-                        }
+            case "municipio":
+                Map<String, Object> mapMunicipio = (Map<String, Object>) valor;
+                Municipio municipioAux = new Municipio();
+                for(String umAttrMun : mapMunicipio.keySet()) {
+                    switch (umAttrMun) {
+                        case "id":
+                            municipioAux.setId((Long)mapMunicipio.get(umAttrMun));
+                            break;
+                        case "nome":
+                            municipioAux.setNome(mapMunicipio.get(umAttrMun).toString());
+                            break;
                     }
-                    lCarrosAux.add(carroAux);
                 }
-                linhaAux.setCarros(lCarrosAux);
+                linhaAux.setMunicipio(municipioAux);
                 break;
             default:
                 break;
@@ -151,13 +112,5 @@ public class Linha implements Serializable {
 
     public void setMunicipio(Municipio municipio) {
         this.municipio = municipio;
-    }
-
-    public boolean ehFavorito() {
-        return ehFavorito;
-    }
-
-    public void setEhFavorito(boolean ehFavorito) {
-        this.ehFavorito = ehFavorito;
     }
 }

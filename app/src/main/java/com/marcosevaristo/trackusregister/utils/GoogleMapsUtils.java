@@ -24,8 +24,12 @@ public class GoogleMapsUtils  {
             polylineOpt.add(latlng);
         }
         polylineOpt.color(Color.BLUE);
-        polylineOpt.width(10);
+        polylineOpt.width(12);
 
         return polylineOpt;
+    }
+
+    public static String getLatLngToString(LatLng latLng) {
+        return latLng != null ? latLng.latitude + "," + latLng.longitude : "";
     }
 }

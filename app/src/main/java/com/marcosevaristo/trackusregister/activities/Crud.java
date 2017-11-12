@@ -8,6 +8,5 @@ public interface Crud {
     void novo();
     void edita(Bundle bundle);
     void exclui();
-    void limpa();
     void salva();
 }

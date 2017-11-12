@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import com.marcosevaristo.trackusregister.App;
 import com.marcosevaristo.trackusregister.R;
-import com.marcosevaristo.trackusregister.components.BotaoFavorito;
-import com.marcosevaristo.trackusregister.database.QueryBuilder;
 import com.marcosevaristo.trackusregister.model.Linha;
 
 import java.util.ArrayList;
@@ -54,9 +52,11 @@ public class LinhasAdapter extends ArrayAdapter<Linha> {
 
             TextView linhaBuscadaText = (TextView)view.findViewById(R.id.linhaBuscadaText);
             TextView linhaBuscadaSubText = (TextView)view.findViewById(R.id.linhaBuscadaSubText);
+            TextView linhaBuscadaMunicipioText = (TextView)view.findViewById(R.id.linhaBuscadaMunicipioText);
 
             linhaHolder.texto = linhaBuscadaText;
             linhaHolder.subTexto = linhaBuscadaSubText;
+            linhaHolder.municipioText = linhaBuscadaMunicipioText;
 
             view.setTag(linhaHolder);
         } else {
@@ -67,6 +67,7 @@ public class LinhasAdapter extends ArrayAdapter<Linha> {
         if(linha != null) {
             linhaHolder.texto.setText(linha.getNumero()+" - "+linha.getTitulo());
             linhaHolder.subTexto.setText(linha.getSubtitulo());
+            linhaHolder.municipioText.setText(linha.getMunicipio().getNome());
         }
         return view;
     }
@@ -74,5 +75,6 @@ public class LinhasAdapter extends ArrayAdapter<Linha> {
     private static class LinhaHolder {
         TextView texto;
         TextView subTexto;
+        TextView municipioText;
     }
 }
