@@ -59,6 +59,21 @@
     <!-- END NOME -->
 
     <!-- START FAB -->
+
+    <TextView
+        android:id="@+id/label_fab_linhas_municipio"
+        android:layout_toLeftOf="@+id/fab_linhas_municipio"
+        android:layout_toStartOf="@+id/fab_linhas_municipio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="@string/textLabelFabLinhasMunicipio"
+        android:textSize="@dimen/textDefaultSize"
+        android:layout_marginBottom="@dimen/fab_margin_5"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:visibility="invisible" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_linhas_municipio"
         android:src="@drawable/ic_list_black_24dp"
@@ -70,7 +85,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/fab_small_sides_margin"
         android:layout_marginEnd="@dimen/fab_small_sides_margin"
-        android:layout_marginBottom="@dimen/fab_margin_6"
+        android:layout_marginBottom="@dimen/fab_margin_5"
         android:visibility="invisible"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"

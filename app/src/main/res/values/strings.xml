@@ -34,5 +34,10 @@
     <string name="spinner_title">Município</string>
     <string name="textLabelMapaLinha">Rota</string>
     <string name="nao_achou_municipio_no_mapa">Não foi possível encontrar o município %1$s no mapa.</string>
-    <string name="carregando">Carregando...</string>
+    <string name="carregando">Carregando…</string>
+    <string name="textLabelFabClearMap">Limpar mapa</string>
+    <string name="textLabelFabAdd">Novo</string>
+    <string name="textLabelFabClone">Clonar</string>
+    <string name="textLabelFabDel">Excluir</string>
+    <string name="textLabelFabLinhasMunicipio">Consultar linhas</string>
 </resources>

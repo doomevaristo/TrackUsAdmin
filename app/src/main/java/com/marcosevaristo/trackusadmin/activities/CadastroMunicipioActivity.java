@@ -22,7 +22,7 @@ import com.marcosevaristo.trackusadmin.model.Municipio;
 public class CadastroMunicipioActivity extends AppCompatActivity implements Crud, View.OnClickListener{
 
     private Boolean isFabOpen = false;
-    private FloatingActionButton fabMenu,fabAdd,fabDel,fabLinhas;
+    private FloatingActionButton fabMenu,fabAdd,fabDel,fabClone,fabLinhas;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private TextView labelAdd, labelClear, labelClone, labelDel, labelListLinhas;
 
@@ -83,7 +83,14 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
+        fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
         fabLinhas = (FloatingActionButton)findViewById(R.id.fab_linhas_municipio);
+
+        labelAdd = (TextView) findViewById(R.id.label_fab_add);
+        labelDel = (TextView) findViewById(R.id.label_fab_del);
+        labelClear = (TextView) findViewById(R.id.label_fab_clear);
+        labelClone = (TextView) findViewById(R.id.label_fab_clone);
+        labelListLinhas = (TextView) findViewById(R.id.label_fab_linhas_municipio);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
@@ -93,31 +100,37 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
         fabDel.setOnClickListener(this);
+        fabClone.setOnClickListener(this);
         fabLinhas.setOnClickListener(this);
     }
 
     public void animateFAB(){
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
-
             fabAdd.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
+            fabClone.startAnimation(fab_close);
             fabLinhas.startAnimation(fab_close);
+            labelListLinhas.setVisibility(View.INVISIBLE);
 
             fabAdd.setClickable(false);
             fabDel.setClickable(false);
+            fabClone.setClickable(false);
             fabLinhas.setClickable(false);
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
-            fabLinhas.startAnimation(fab_open);
+            fabClone.startAnimation(fab_open);
             if(municipio != null && municipio.getId() != null) fabDel.startAnimation(fab_open);
-            fabAdd.setClickable(true);
-            fabLinhas.setClickable(true);
-            if(municipio != null && municipio.getId() != null) fabDel.setClickable(true);
-            isFabOpen = true;
+            fabLinhas.startAnimation(fab_open);
+            labelListLinhas.setVisibility(View.VISIBLE);
 
+            fabAdd.setClickable(true);
+            fabClone.setClickable(true);
+            if(municipio != null && municipio.getId() != null) fabDel.setClickable(true);
+            fabLinhas.setClickable(true);
+            isFabOpen = true;
         }
     }
 
