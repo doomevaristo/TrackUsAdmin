@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marcosevaristo.trackusadmin.App;
@@ -23,6 +24,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     private Boolean isFabOpen = false;
     private FloatingActionButton fabMenu,fabAdd,fabDel,fabLinhas;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private TextView labelAdd, labelClear, labelClone, labelDel, labelListLinhas;
 
     private Municipio municipio;
 
@@ -78,9 +80,9 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     }
 
     private void setupFloatingActionButtons() {
-        fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu_municipio);
-        fabAdd = (FloatingActionButton)findViewById(R.id.fab_add_municipio);
-        fabDel = (FloatingActionButton)findViewById(R.id.fab_del_municipio);
+        fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
+        fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
+        fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
         fabLinhas = (FloatingActionButton)findViewById(R.id.fab_linhas_municipio);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
@@ -123,14 +125,14 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     public void onClick(View v) {
         int id = v.getId();
         switch (id){
-            case R.id.fab_menu_municipio:
+            case R.id.fab_menu:
                 animateFAB();
                 break;
-            case R.id.fab_add_municipio:
+            case R.id.fab_add:
 
                 Log.d("Raj", "Fab 1");
                 break;
-            case R.id.fab_del_municipio:
+            case R.id.fab_del:
 
                 Log.d("Raj", "Fab 2");
                 break;
@@ -140,6 +142,10 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
                 bundle.putSerializable("municipio", municipio);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                break;
+            case R.id.fab_clone:
+                //TODO: clonar
+                break;
         }
     }
 }

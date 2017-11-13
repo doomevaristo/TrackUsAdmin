@@ -51,7 +51,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     private Boolean isFabOpen = false;
     private TextInputEditText etNumero, etTituloLinha, etSubtituloLinha;
     private Spinner spinnerMunicipios;
-    private FloatingActionButton fabMenu,fabAdd,fabDel,fabClr;
+    private FloatingActionButton fabMenu,fabAdd,fabDel,fabClr,fabClone;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
 
@@ -137,10 +137,11 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     }
 
     private void setupFloatingActionButtons() {
-        fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu_linha);
-        fabAdd = (FloatingActionButton)findViewById(R.id.fab_add_linha);
-        fabDel = (FloatingActionButton)findViewById(R.id.fab_del_linha);
-        fabClr = (FloatingActionButton)findViewById(R.id.fab_clear_map);
+        fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
+        fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
+        fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
+        fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
+        fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
@@ -151,6 +152,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabAdd.setOnClickListener(this);
         fabDel.setOnClickListener(this);
         fabClr.setOnClickListener(this);
+        fabClone.setOnClickListener(this);
     }
 
     public void animateFAB(){
@@ -160,9 +162,11 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             fabAdd.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
             fabClr.startAnimation(fab_close);
+            fabClone.startAnimation(fab_close);
             fabAdd.setClickable(false);
             fabDel.setClickable(false);
             fabClr.setClickable(false);
+            fabClone.setClickable(false);
 
             isFabOpen = false;
         } else {
@@ -171,9 +175,11 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             fabAdd.startAnimation(fab_open);
             fabDel.startAnimation(fab_open);
             fabClr.startAnimation(fab_open);
+            fabClone.startAnimation(fab_open);
             fabAdd.setClickable(true);
             fabDel.setClickable(true);
             fabClr.setClickable(true);
+            fabClone.setClickable(true);
             isFabOpen = true;
         }
     }
@@ -182,21 +188,24 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     public void onClick(View v) {
         int id = v.getId();
         switch (id){
-            case R.id.fab_menu_linha:
+            case R.id.fab_menu:
                 animateFAB();
                 break;
-            case R.id.fab_add_linha:
+            case R.id.fab_add:
                 novo();
                 animateFAB();
                 break;
-            case R.id.fab_del_linha:
+            case R.id.fab_del:
                 //TODO: pedir confirmação
                 exclui();
                 animateFAB();
                 break;
-            case R.id.fab_clear_map:
+            case R.id.fab_clear:
                 clearMap();
                 animateFAB();
+                break;
+            case R.id.fab_clone:
+                //TODO: clonar
                 break;
         }
     }
