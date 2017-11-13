@@ -134,6 +134,8 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
                 Log.d("Raj", "Fab 2");
                 break;
+            case R.id.fab_linhas_municipio:
+
         }
     }
 }
