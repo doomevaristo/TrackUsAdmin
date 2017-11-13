@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TrackUsRegister.iml" filepath="$PROJECT_DIR$/TrackUsRegister.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TrackUsAdmin.iml" filepath="$PROJECT_DIR$/TrackUsAdmin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

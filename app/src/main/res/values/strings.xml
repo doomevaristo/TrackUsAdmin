@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrackUsRegister</string>
+    <string name="app_name">TrackUsAdmin</string>
 
     <string name="abaLinhas">Linhas</string>
     <string name="abaMunicipios">Municipios</string>
