@@ -73,21 +73,6 @@ public class Linha implements Serializable {
             case "subtitulo":
                 linhaAux.setSubtitulo(valor.toString());
                 break;
-            case "municipio":
-                Map<String, Object> mapMunicipio = (Map<String, Object>) valor;
-                Municipio municipioAux = new Municipio();
-                for(String umAttrMun : mapMunicipio.keySet()) {
-                    switch (umAttrMun) {
-                        case "id":
-                            municipioAux.setId((Long)mapMunicipio.get(umAttrMun));
-                            break;
-                        case "nome":
-                            municipioAux.setNome(mapMunicipio.get(umAttrMun).toString());
-                            break;
-                    }
-                }
-                linhaAux.setMunicipio(municipioAux);
-                break;
             default:
                 break;
         }

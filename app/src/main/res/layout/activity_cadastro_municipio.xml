@@ -61,7 +61,7 @@
     <!-- START FAB -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_linhas_municipio"
-        android:src="@drawable/ic_delete_black_24dp"
+        android:src="@drawable/ic_list_black_24dp"
         android:backgroundTint="@color/greyButtons"
         android:layout_width="@dimen/fabDimen"
         android:layout_height="@dimen/fabDimen"

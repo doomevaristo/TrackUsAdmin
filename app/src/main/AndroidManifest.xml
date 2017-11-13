@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.SelecionaMunicipio" />
+        <activity android:name=".activities.ConsultaLinhasActivity" />
         <activity android:name=".activities.CadastroLinhaActivity" />
         <activity android:name=".activities.CadastroMunicipioActivity" />
 

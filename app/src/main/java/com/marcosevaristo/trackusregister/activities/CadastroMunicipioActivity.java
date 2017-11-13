@@ -1,5 +1,6 @@
 package com.marcosevaristo.trackusregister.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.marcosevaristo.trackusregister.App;
@@ -135,7 +135,11 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
                 Log.d("Raj", "Fab 2");
                 break;
             case R.id.fab_linhas_municipio:
-
+                Intent intent = new Intent(App.getAppContext(), ConsultaLinhasActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("municipio", municipio);
+                intent.putExtras(bundle);
+                startActivity(intent);
         }
     }
 }

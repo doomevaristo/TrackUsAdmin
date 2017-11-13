@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.marcosevaristo.trackusregister.fragments.ConsultaLinhasActivity">
+    tools:context="com.marcosevaristo.trackusregister.activities.ConsultaLinhasActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 
     <ListView
         android:id="@+id/listaLinhas"
-        android:layout_marginTop="@dimen/marginTopListItens"
+        android:layout_marginTop="@dimen/marginTopComAppBar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/listItensHeight" />
 

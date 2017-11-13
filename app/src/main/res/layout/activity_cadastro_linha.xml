@@ -84,7 +84,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinnerMunicipioLinha"
         android:prompt="@string/spinner_title"
-        android:layout_below="@+id/textLayoutSubtituloLinha"/>
+        android:layout_below="@+id/textLayoutSubtituloLinha"
+        android:padding="@dimen/fieldDefaultPadding"/>
     <!-- END MUNICIPIO -->
 
     <!-- START MAP -->
