@@ -21,7 +21,7 @@ import com.marcosevaristo.trackusregister.model.Municipio;
 public class CadastroMunicipioActivity extends AppCompatActivity implements Crud, View.OnClickListener{
 
     private Boolean isFabOpen = false;
-    private FloatingActionButton fabMenu,fabAdd,fabDel;
+    private FloatingActionButton fabMenu,fabAdd,fabDel,fabLinhas;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
 
     private Municipio municipio;
@@ -81,6 +81,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu_municipio);
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add_municipio);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del_municipio);
+        fabLinhas = (FloatingActionButton)findViewById(R.id.fab_linhas_municipio);
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
@@ -90,24 +91,28 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
         fabDel.setOnClickListener(this);
+        fabLinhas.setOnClickListener(this);
     }
 
     public void animateFAB(){
         if(isFabOpen){
-
             fabMenu.startAnimation(rotate_backward);
+
             fabAdd.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
+            fabLinhas.startAnimation(fab_close);
+
             fabAdd.setClickable(false);
             fabDel.setClickable(false);
+            fabLinhas.setClickable(false);
             isFabOpen = false;
-
         } else {
-
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
+            fabLinhas.startAnimation(fab_open);
             if(municipio != null && municipio.getId() != null) fabDel.startAnimation(fab_open);
             fabAdd.setClickable(true);
+            fabLinhas.setClickable(true);
             if(municipio != null && municipio.getId() != null) fabDel.setClickable(true);
             isFabOpen = true;
 
