@@ -58,7 +58,6 @@ public class MunicipiosAdapter extends ArrayAdapter<Municipio> {
         Municipio municipio = lMunicipios.get(position);
         if(municipio != null) {
             municipioHolder.texto.setText(municipio.getNome());
-            if(municipio.isEhMunicipioAtual()) municipioHolder.textoMunAtual.setText(App.getAppContext().getString(R.string.municipioAtualDet));
         }
         return view;
     }

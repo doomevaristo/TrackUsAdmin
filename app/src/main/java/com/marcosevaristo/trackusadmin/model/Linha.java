@@ -14,11 +14,11 @@ public class Linha implements Serializable {
     private String numero;
     private String titulo;
     private String subtitulo;
+    private List<Carro> carros;
 
     private static final long serialVersionUID = 1L;
 
-    public Linha() {
-    }
+    public Linha() {}
 
     public String getNumero() {
         return numero;
@@ -42,6 +42,14 @@ public class Linha implements Serializable {
 
     public void setSubtitulo(String subtitulo) {
         this.subtitulo = subtitulo;
+    }
+
+    public List<Carro> getCarros() {
+        return carros;
+    }
+
+    public void setCarros(List<Carro> carros) {
+        this.carros = carros;
     }
 
     public static List<Linha> converteMapParaListaLinhas(Map<String, Object> lMapLinhas) {
@@ -76,6 +84,8 @@ public class Linha implements Serializable {
             case "subtitulo":
                 linhaAux.setSubtitulo(valor.toString());
                 break;
+            case "carros":
+                linhaAux.setCarros(Carro.converteMapParaListCarros((Map) valor));
             default:
                 break;
         }
