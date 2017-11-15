@@ -1,16 +1,19 @@
 package com.marcosevaristo.trackusadmin.model;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class Linha implements Serializable {
+
+    @Exclude
     private Municipio municipio;
     private String numero;
     private String titulo;
     private String subtitulo;
-    private boolean ehFavorito = false;
 
     private static final long serialVersionUID = 1L;
 
@@ -91,10 +94,12 @@ public class Linha implements Serializable {
         return sb.toString();
     }
 
+    @Exclude
     public Municipio getMunicipio() {
         return municipio;
     }
 
+    @Exclude
     public void setMunicipio(Municipio municipio) {
         this.municipio = municipio;
     }

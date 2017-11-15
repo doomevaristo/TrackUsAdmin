@@ -1,5 +1,9 @@
 package com.marcosevaristo.trackusadmin.model;
 
+import android.support.annotation.TransitionRes;
+
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,48 +14,27 @@ public class Municipio implements Serializable {
 
     private Long id;
     private String nome;
-    private List<Linha> lLinhas;
-    private boolean ehMunicipioAtual;
+    private List<Linha> linhas;
 
     public Municipio(){}
 
-    public Municipio(Long id) {
-        this.id = id;
-    }
-
-    public Municipio(Long id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public List<Linha> getlLinhas() {
-        return lLinhas;
+    public List<Linha> getLinhas() {
+        return linhas;
     }
-
-    public void setlLinhas(List<Linha> lLinhas) {
-        this.lLinhas = lLinhas;
-    }
-
-    public boolean isEhMunicipioAtual() {
-        return ehMunicipioAtual;
-    }
-
-    public void setEhMunicipioAtual(boolean ehMunicipioAtual) {
-        this.ehMunicipioAtual = ehMunicipioAtual;
+    public void setLinhas(List<Linha> linhas) {
+        this.linhas = linhas;
     }
 
     @Override
@@ -87,7 +70,7 @@ public class Municipio implements Serializable {
                 municipioAux = new Municipio();
                 municipioAux.setId(idAux);
                 municipioAux.setNome(nomeAux);
-                municipioAux.setlLinhas(listLinhas);
+                municipioAux.setLinhas(listLinhas);
                 lMunicipios.add(municipioAux);
             }
         }

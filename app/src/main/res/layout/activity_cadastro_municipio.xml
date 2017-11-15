@@ -69,7 +69,7 @@
         android:textColor="#000000"
         android:text="@string/textLabelFabLinhasMunicipio"
         android:textSize="@dimen/textDefaultSize"
-        android:layout_marginBottom="@dimen/fab_margin_5"
+        android:layout_marginBottom="@dimen/fab_margin_6"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
         android:visibility="invisible" />
@@ -85,7 +85,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/fab_small_sides_margin"
         android:layout_marginEnd="@dimen/fab_small_sides_margin"
-        android:layout_marginBottom="@dimen/fab_margin_5"
+        android:layout_marginBottom="@dimen/fab_margin_6"
         android:visibility="invisible"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"

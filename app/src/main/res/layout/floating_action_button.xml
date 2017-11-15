@@ -28,6 +28,36 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/fab_small_sides_margin"
         android:layout_marginEnd="@dimen/fab_small_sides_margin"
+        android:layout_marginBottom="@dimen/fab_margin_5"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_gravity="bottom|end"
+        app:fabSize="mini"/>
+
+    <TextView
+        android:id="@+id/label_fab_save"
+        android:layout_toLeftOf="@+id/fab_del"
+        android:layout_toStartOf="@+id/fab_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="@string/textLabelFabDel"
+        android:textSize="@dimen/textDefaultSize"
+        android:visibility="invisible"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_save"
+        android:src="@drawable/ic_save_black_24dp"
+        android:backgroundTint="@color/greyButtons"
+        android:foregroundTint="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/fab_small_sides_margin"
+        android:layout_marginEnd="@dimen/fab_small_sides_margin"
         android:layout_marginBottom="@dimen/fab_margin_4"
         android:visibility="invisible"
         app:elevation="6dp"

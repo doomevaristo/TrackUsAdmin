@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
@@ -22,9 +25,9 @@ import com.marcosevaristo.trackusadmin.model.Municipio;
 public class CadastroMunicipioActivity extends AppCompatActivity implements Crud, View.OnClickListener{
 
     private Boolean isFabOpen = false;
-    private FloatingActionButton fabMenu,fabAdd,fabDel,fabClone,fabLinhas;
+    private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabClone,fabLinhas;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
-    private TextView labelAdd, labelClear, labelClone, labelDel, labelListLinhas;
+    private TextView labelAdd, labelClear, labelClone, labelSave, labelDel, labelListLinhas;
 
     private Municipio municipio;
 
@@ -68,7 +71,10 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
     @Override
     public void salva() {
+        FirebaseUtils.getMunicipiosReference(municipio.getId()).setValue(municipio);
+        FirebaseUtils.getMunicipiosReference(municipio.getId()).push();
 
+        App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
     }
 
     private void setaMunicipioEmTela(Municipio municipio) {
@@ -83,10 +89,12 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
+        fabSave = (FloatingActionButton)findViewById(R.id.fab_save);
         fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
         fabLinhas = (FloatingActionButton)findViewById(R.id.fab_linhas_municipio);
 
         labelAdd = (TextView) findViewById(R.id.label_fab_add);
+        labelSave = (TextView) findViewById(R.id.label_fab_save);
         labelDel = (TextView) findViewById(R.id.label_fab_del);
         labelClear = (TextView) findViewById(R.id.label_fab_clear);
         labelClone = (TextView) findViewById(R.id.label_fab_clone);
@@ -99,6 +107,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
+        fabSave.setOnClickListener(this);
         fabDel.setOnClickListener(this);
         fabClone.setOnClickListener(this);
         fabLinhas.setOnClickListener(this);
@@ -108,12 +117,14 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
+            fabSave.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
             fabClone.startAnimation(fab_close);
             fabLinhas.startAnimation(fab_close);
             labelListLinhas.setVisibility(View.INVISIBLE);
 
             fabAdd.setClickable(false);
+            fabSave.setClickable(false);
             fabDel.setClickable(false);
             fabClone.setClickable(false);
             fabLinhas.setClickable(false);
@@ -121,12 +132,14 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         } else {
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
+            fabSave.startAnimation(fab_open);
             fabClone.startAnimation(fab_open);
             if(municipio != null && municipio.getId() != null) fabDel.startAnimation(fab_open);
             fabLinhas.startAnimation(fab_open);
             labelListLinhas.setVisibility(View.VISIBLE);
 
             fabAdd.setClickable(true);
+            fabSave.setClickable(true);
             fabClone.setClickable(true);
             if(municipio != null && municipio.getId() != null) fabDel.setClickable(true);
             fabLinhas.setClickable(true);
@@ -144,6 +157,9 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             case R.id.fab_add:
 
                 Log.d("Raj", "Fab 1");
+                break;
+            case R.id.fab_save:
+                salva();
                 break;
             case R.id.fab_del:
 
