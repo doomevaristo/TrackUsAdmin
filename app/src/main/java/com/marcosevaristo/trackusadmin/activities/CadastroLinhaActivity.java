@@ -97,10 +97,10 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
         fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
 
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
+        fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_backward);
 
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
