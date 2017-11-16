@@ -136,7 +136,6 @@
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-
         app:fabSize="normal" />
 
 </RelativeLayout>

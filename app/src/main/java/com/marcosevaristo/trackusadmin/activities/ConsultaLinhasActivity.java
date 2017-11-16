@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -31,13 +34,17 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ConsultaLinhasActivity extends AppCompatActivity {
+public class ConsultaLinhasActivity extends AppCompatActivity implements View.OnClickListener{
 
     private ListView lView;
     private LinhasAdapter adapter;
     private Municipio municipio;
     private List<Linha> lLinhas;
     private ProgressBar progressBar;
+
+    private FloatingActionButton fabMenu,fabAdd,fabSearch;
+    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+    private Boolean isFabOpen = false;
 
     public ConsultaLinhasActivity() {}
 
@@ -49,7 +56,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity {
         municipio = (Municipio) bundle.get("municipio");
 
         setupComponents(StringUtils.emptyString());
-        setupFloatingActionButton();
+        setupFloatingActionButtons();
     }
 
     private void setupComponents(String argBusca) {
@@ -101,45 +108,82 @@ public class ConsultaLinhasActivity extends AppCompatActivity {
                 Intent intent = new Intent(App.getAppContext(), CadastroLinhaActivity.class);
                 Bundle bundleAux = new Bundle();
                 bundleAux.putSerializable("linha", (Linha)parent.getItemAtPosition(position));
+                bundleAux.putSerializable("municipio", municipio);
                 intent.putExtras(bundleAux);
                 startActivity(intent);
             }
         };
     }
 
-    private void setupFloatingActionButton() {
-         findViewById(R.id.fab_search_linhas).setOnClickListener(getOnClickListenerFAB());
+    private void setupFloatingActionButtons() {
+        fabMenu = (FloatingActionButton) findViewById(R.id.fab_menu);
+        fabAdd = (FloatingActionButton) findViewById(R.id.fab_add);
+        fabSearch = (FloatingActionButton) findViewById(R.id.fab_search_linhas);
+
+        fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_backward);
+
+        fabMenu.setOnClickListener(this);
+        fabAdd.setOnClickListener(this);
+        fabSearch.setOnClickListener(this);
     }
 
-    private View.OnClickListener getOnClickListenerFAB() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.fab_menu:
+                animateFAB();
+                break;
+            case R.id.fab_add:
+                Intent intent = new Intent(App.getAppContext(), CadastroLinhaActivity.class);
+                Bundle bundleAux = new Bundle();
+                bundleAux.putSerializable("municipio", municipio);
+                intent.putExtras(bundleAux);
+                startActivity(intent);
+                break;
+            case R.id.fab_search_municipios:
                 TextView busca = (TextView) findViewById(R.id.etBuscaLinhas);
                 InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if(busca.getVisibility() == View.GONE) {
-                    exibeComponenteDeBusca(busca, imm);
+                    busca.setVisibility(View.VISIBLE);
+                    busca.requestFocus();
+                    busca.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                    busca.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+                    busca.setTypeface(Typeface.SANS_SERIF);
+                    imm.showSoftInput(busca, InputMethodManager.SHOW_IMPLICIT);
                 } else {
                     String arg = busca.getText().toString();
                     setupComponents(arg);
-                    escondeComponenteDeBusca(busca, imm);
+                    busca.setText("");
+                    busca.setVisibility(View.GONE);
+                    imm.hideSoftInputFromWindow(busca.getWindowToken(), 0);
                 }
-            }
+                break;
 
-            private void exibeComponenteDeBusca(TextView busca, InputMethodManager imm) {
-                busca.setVisibility(View.VISIBLE);
-                busca.requestFocus();
-                busca.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-                busca.setTransformationMethod(new NumericKeyBoardTransformationMethod());
-                busca.setTypeface(Typeface.SANS_SERIF);
-                imm.showSoftInput(busca, InputMethodManager.SHOW_IMPLICIT);
-            }
+        }
+    }
 
-            private void escondeComponenteDeBusca(TextView busca, InputMethodManager imm) {
-                busca.setText("");
-                busca.setVisibility(View.GONE);
-                imm.hideSoftInputFromWindow(busca.getWindowToken(), 0);
-            }
-        };
+    public void animateFAB(){
+        if(isFabOpen){
+            fabMenu.startAnimation(rotate_backward);
+            fabAdd.startAnimation(fab_close);
+            fabSearch.startAnimation(fab_close);
+
+            fabAdd.setClickable(false);
+            fabSearch.setClickable(false);
+            isFabOpen = false;
+        } else {
+            fabMenu.startAnimation(rotate_forward);
+            fabAdd.startAnimation(fab_open);
+            fabSearch.startAnimation(fab_open);
+
+            fabAdd.setClickable(true);
+            fabSearch.setClickable(false);
+
+            isFabOpen = true;
+        }
     }
 }

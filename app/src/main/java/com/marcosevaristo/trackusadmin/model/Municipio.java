@@ -39,9 +39,7 @@ public class Municipio implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.id).append(" - ").append(this.nome);
-        return sb.toString();
+        return this.nome;
     }
 
     public static List<Municipio> converteListMapParaListaMunicipios(Map<String, Object> mapValues) {

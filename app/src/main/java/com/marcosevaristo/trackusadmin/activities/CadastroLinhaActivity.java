@@ -11,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -26,12 +24,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
-import com.marcosevaristo.trackusadmin.adapters.MunicipiosAdapter;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Linha;
 import com.marcosevaristo.trackusadmin.model.Municipio;
@@ -45,81 +40,39 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback {
+public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
     private TextInputEditText etNumero, etTituloLinha, etSubtituloLinha;
-    private Spinner spinnerMunicipios;
-    private FloatingActionButton fabMenu,fabAdd,fabDel,fabClr,fabClone;
+    private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabClr,fabClone;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
 
     private List<Marker> markers;
     private ArrayList<LatLng> points;
     private ProgressDialog progressDialog;
-    private List<Municipio> lMunicipios;
 
+    private Municipio municipio;
     private Linha linha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_linha);
-
         setupToolbar();
         setupFloatingActionButtons();
-        setupSpinnerMunicipios();
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
+            municipio = (Municipio) bundle.get("municipio");
+        }
+
+        if(bundle != null && bundle.get("linha") != null) {
             edita(bundle);
         } else {
             novo();
         }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
-
-    private void setupSpinnerMunicipios() {
-        spinnerMunicipios = (Spinner) findViewById(R.id.spinnerMunicipioLinha);
-        spinnerMunicipios.setOnItemSelectedListener(this);
-        FirebaseUtils.getMunicipiosReference(null).getRef().addListenerForSingleValueEvent(getEventoBuscaMunicipiosFirebase());
-    }
-
-    private ValueEventListener getEventoBuscaMunicipiosFirebase() {
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
-                if (mapValues != null) {
-                    lMunicipios = new ArrayList<>();
-                    lMunicipios.addAll(Municipio.converteListMapParaListaMunicipios(mapValues));
-                    setupMunicipiosAdapter();
-                } else {
-                    Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-    }
-
-    private void setupMunicipiosAdapter() {
-        MunicipiosAdapter adapter = new MunicipiosAdapter(R.layout.municipio_item, lMunicipios);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMunicipios.setAdapter(adapter);
-
-        if(linha != null && linha.getMunicipio() != null) {
-            for(int i = 0; i < lMunicipios.size(); i++) {
-                if(lMunicipios.get(i).getId().equals(linha.getMunicipio().getId())) {
-                    spinnerMunicipios.setSelection(i);
-                    break;
-                }
-            }
-        }
     }
 
     private void setupLinhaNaTela(){
@@ -140,6 +93,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
+        fabSave = (FloatingActionButton)findViewById(R.id.fab_save);
         fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
         fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
 
@@ -150,6 +104,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
+        fabSave.setOnClickListener(this);
         fabDel.setOnClickListener(this);
         fabClr.setOnClickListener(this);
         fabClone.setOnClickListener(this);
@@ -158,12 +113,14 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     public void animateFAB(){
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
-
             fabAdd.startAnimation(fab_close);
             fabDel.startAnimation(fab_close);
+            fabSave.startAnimation(fab_close);
             fabClr.startAnimation(fab_close);
             fabClone.startAnimation(fab_close);
+
             fabAdd.setClickable(false);
+            fabSave.setClickable(false);
             fabDel.setClickable(false);
             fabClr.setClickable(false);
             fabClone.setClickable(false);
@@ -171,15 +128,18 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
-
             fabAdd.startAnimation(fab_open);
+            fabSave.startAnimation(fab_open);
             fabDel.startAnimation(fab_open);
             fabClr.startAnimation(fab_open);
             fabClone.startAnimation(fab_open);
+
             fabAdd.setClickable(true);
+            fabSave.setClickable(true);
             fabDel.setClickable(true);
             fabClr.setClickable(true);
             fabClone.setClickable(true);
+
             isFabOpen = true;
         }
     }
@@ -189,36 +149,37 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         int id = v.getId();
         switch (id){
             case R.id.fab_menu:
-                animateFAB();
                 break;
             case R.id.fab_add:
                 novo();
-                animateFAB();
+                break;
+            case R.id.fab_save:
+                salva();
                 break;
             case R.id.fab_del:
-                //TODO: pedir confirmação
                 exclui();
-                animateFAB();
                 break;
             case R.id.fab_clear:
                 clearMap();
-                animateFAB();
                 break;
             case R.id.fab_clone:
                 //TODO: clonar
                 break;
         }
+        animateFAB();
     }
 
     @Override
     public void novo() {
         linha = new Linha();
+        linha.setMunicipio(municipio);
         setupLinhaNaTela();
     }
 
     @Override
     public void edita(Bundle bundle) {
         linha = (Linha) bundle.get("linha");
+        linha.setMunicipio(municipio);
         setupLinhaNaTela();
     }
 
@@ -233,7 +194,23 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
     @Override
     public void salva() {
+        setupTelaNaLinha();
+        DatabaseReference referenciaFirebase = FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getNumero());
+        if(municipio.getId() == null) {
+            referenciaFirebase = referenciaFirebase.push();
+            municipio.setId(referenciaFirebase.getKey());
+            referenciaFirebase.setValue(municipio);
+        } else {
+            referenciaFirebase.setValue(municipio);
+        }
 
+        App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
+    }
+
+    private void setupTelaNaLinha() {
+        linha.setNumero(etNumero.getText().toString());
+        linha.setTitulo(etTituloLinha.getText().toString());
+        linha.setSubtitulo(etSubtituloLinha.getText().toString());
     }
 
     @Override
@@ -282,22 +259,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                 }
             }
         };
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int componenteId = view.getId();
-        switch (componenteId) {
-            case R.id.spinnerMunicipioLinha:
-                linha.setMunicipio((Municipio) parent.getItemAtPosition(position));
-                break;
-        }
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        linha.setMunicipio(null);
     }
 
     private void traceRoute(Marker lastMarker) {

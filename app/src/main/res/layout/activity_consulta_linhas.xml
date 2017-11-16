@@ -47,14 +47,27 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_search_linhas"
-        android:src="@drawable/ic_fab_search"
-        android:layout_width="@dimen/fabDimen"
-        android:layout_height="@dimen/fabDimen"
+        android:src="@drawable/ic_search_black_24dp"
+        android:backgroundTint="@color/greyButtons"
+        android:foregroundTint="@android:color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        app:fabSize="normal"
-        />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/fab_small_sides_margin"
+        android:layout_marginEnd="@dimen/fab_small_sides_margin"
+        android:layout_marginBottom="@dimen/fab_margin_3"
+        android:visibility="invisible"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:layout_gravity="bottom|end"
+        app:fabSize="mini"/>
+
+    <include
+        layout="@layout/floating_action_button"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/floating_action_buttons"/>
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ public class Linha implements Serializable {
 
     @Exclude
     private Municipio municipio;
+    private String id;
     private String numero;
     private String titulo;
     private String subtitulo;
@@ -67,6 +68,8 @@ public class Linha implements Serializable {
 
     private static void montaUmAtributoDaLinha(Linha linhaAux, String atributo, Object valor) {
         switch(atributo) {
+            case "id":
+                linhaAux.setId(valor.toString());
             case "numero":
                 linhaAux.setNumero(valor.toString());
                 break;
@@ -104,5 +107,13 @@ public class Linha implements Serializable {
     @Exclude
     public void setMunicipio(Municipio municipio) {
         this.municipio = municipio;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

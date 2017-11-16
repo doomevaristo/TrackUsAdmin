@@ -27,6 +27,7 @@ import com.marcosevaristo.trackusadmin.activities.ConsultaLinhasActivity;
 import com.marcosevaristo.trackusadmin.adapters.MunicipiosAdapter;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Municipio;
+import com.marcosevaristo.trackusadmin.utils.CollectionUtils;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -106,13 +107,13 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot municipioSnapshot : dataSnapshot.getChildren()) {
-                    Municipio municipio = municipioSnapshot.getValue(Municipio.class);
-                }
-                Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
-                if (mapValues != null) {
-                    lMunicipios = new ArrayList<>();
-                    lMunicipios.addAll(Municipio.converteListMapParaListaMunicipios(mapValues));
+                lMunicipios = new ArrayList<>();
+                if(dataSnapshot == null || dataSnapshot.getChildren() != null) {
+                    for (DataSnapshot municipioSnapshot : dataSnapshot.getChildren()) {
+                        Municipio municipio = municipioSnapshot.getValue(Municipio.class);
+                        municipio.setId(municipioSnapshot.getKey());
+                        lMunicipios.add(municipio);
+                    }
                     setupListAdapter();
                 } else {
                     Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();

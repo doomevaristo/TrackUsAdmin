@@ -6,18 +6,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
@@ -28,7 +23,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     private Boolean isFabOpen = false;
     private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabClone,fabLinhas;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
-    private TextView labelAdd, labelClear, labelClone, labelSave, labelDel, labelListLinhas;
     private TextInputEditText etNome;
 
     private Municipio municipio;
@@ -73,12 +67,12 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
     @Override
     public void salva() {
-        setaTelaNoMunicipio();
+        setupTelaNoMunicipio();
         DatabaseReference referenciaFirebase = FirebaseUtils.getMunicipiosReference(municipio.getId());
         if(municipio.getId() == null) {
             referenciaFirebase = referenciaFirebase.push();
-            referenciaFirebase.setValue(municipio);
             municipio.setId(referenciaFirebase.getKey());
+            referenciaFirebase.setValue(municipio);
         } else {
             referenciaFirebase.setValue(municipio);
         }
@@ -86,7 +80,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
     }
 
-    private void setaTelaNoMunicipio() {
+    private void setupTelaNoMunicipio() {
         municipio.setNome(etNome.getText().toString());
     }
 
@@ -102,13 +96,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         fabSave = (FloatingActionButton)findViewById(R.id.fab_save);
         fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
         fabLinhas = (FloatingActionButton)findViewById(R.id.fab_linhas_municipio);
-
-        labelAdd = (TextView) findViewById(R.id.label_fab_add);
-        labelSave = (TextView) findViewById(R.id.label_fab_save);
-        labelDel = (TextView) findViewById(R.id.label_fab_del);
-        labelClear = (TextView) findViewById(R.id.label_fab_clear);
-        labelClone = (TextView) findViewById(R.id.label_fab_clone);
-        labelListLinhas = (TextView) findViewById(R.id.label_fab_linhas_municipio);
 
         fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
@@ -131,7 +118,6 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabDel.startAnimation(fab_close);
             fabClone.startAnimation(fab_close);
             fabLinhas.startAnimation(fab_close);
-            labelListLinhas.setVisibility(View.INVISIBLE);
 
             fabAdd.setClickable(false);
             fabSave.setClickable(false);
@@ -144,15 +130,19 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabAdd.startAnimation(fab_open);
             fabSave.startAnimation(fab_open);
             fabClone.startAnimation(fab_open);
-            if(municipio != null && municipio.getId() != null) fabDel.startAnimation(fab_open);
-            fabLinhas.startAnimation(fab_open);
-            labelListLinhas.setVisibility(View.VISIBLE);
+            if(municipio != null && municipio.getId() != null) {
+                fabDel.startAnimation(fab_open);
+                fabLinhas.startAnimation(fab_open);
+            }
 
             fabAdd.setClickable(true);
             fabSave.setClickable(true);
             fabClone.setClickable(true);
-            if(municipio != null && municipio.getId() != null) fabDel.setClickable(true);
-            fabLinhas.setClickable(true);
+            if(municipio != null && municipio.getId() != null) {
+                fabDel.setClickable(true);
+                fabLinhas.setClickable(true);
+            }
+
             isFabOpen = true;
         }
     }
@@ -162,18 +152,15 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         int id = v.getId();
         switch (id){
             case R.id.fab_menu:
-                animateFAB();
                 break;
             case R.id.fab_add:
-
-                Log.d("Raj", "Fab 1");
+                novo();
                 break;
             case R.id.fab_save:
                 salva();
                 break;
             case R.id.fab_del:
-
-                Log.d("Raj", "Fab 2");
+                exclui();
                 break;
             case R.id.fab_linhas_municipio:
                 Intent intent = new Intent(App.getAppContext(), ConsultaLinhasActivity.class);
@@ -183,8 +170,9 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
                 startActivity(intent);
                 break;
             case R.id.fab_clone:
-                //TODO: clonar
+                //TODO:clonar
                 break;
         }
+        animateFAB();
     }
 }
