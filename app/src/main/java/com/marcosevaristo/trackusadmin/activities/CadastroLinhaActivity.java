@@ -90,10 +90,10 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Map<String, Object>> lMapValues = (List<Map<String, Object>>) dataSnapshot.getValue();
-                if (lMapValues != null) {
+                Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
+                if (mapValues != null) {
                     lMunicipios = new ArrayList<>();
-                    lMunicipios.addAll(Municipio.converteListMapParaListaMunicipios(lMapValues));
+                    lMunicipios.addAll(Municipio.converteListMapParaListaMunicipios(mapValues));
                     setupMunicipiosAdapter();
                 } else {
                     Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
@@ -28,6 +29,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabClone,fabLinhas;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private TextView labelAdd, labelClear, labelClone, labelSave, labelDel, labelListLinhas;
+    private TextInputEditText etNome;
 
     private Municipio municipio;
 
@@ -71,17 +73,25 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
 
     @Override
     public void salva() {
-        FirebaseUtils.getMunicipiosReference(municipio.getId()).setValue(municipio);
-        FirebaseUtils.getMunicipiosReference(municipio.getId()).push();
+        setaTelaNoMunicipio();
+        DatabaseReference referenciaFirebase = FirebaseUtils.getMunicipiosReference(municipio.getId());
+        if(municipio.getId() == null) {
+            referenciaFirebase = referenciaFirebase.push();
+            referenciaFirebase.setValue(municipio);
+            municipio.setId(referenciaFirebase.getKey());
+        } else {
+            referenciaFirebase.setValue(municipio);
+        }
 
         App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
     }
 
-    private void setaMunicipioEmTela(Municipio municipio) {
-        EditText textViewID = (EditText) findViewById(R.id.textViewID);
-        TextInputEditText etNome = (TextInputEditText) findViewById(R.id.etNomeMunicipio);
+    private void setaTelaNoMunicipio() {
+        municipio.setNome(etNome.getText().toString());
+    }
 
-        textViewID.setText(municipio != null && municipio.getId() != null ? municipio.getId().toString() : null);
+    private void setaMunicipioEmTela(Municipio municipio) {
+        etNome = (TextInputEditText) findViewById(R.id.etNomeMunicipio);
         etNome.setText(municipio != null ? municipio.getNome() : null);
     }
 
@@ -100,10 +110,10 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
         labelClone = (TextView) findViewById(R.id.label_fab_clone);
         labelListLinhas = (TextView) findViewById(R.id.label_fab_linhas_municipio);
 
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
+        fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_backward);
 
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);

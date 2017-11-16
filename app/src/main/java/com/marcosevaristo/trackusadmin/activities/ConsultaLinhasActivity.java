@@ -70,7 +70,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity {
                 Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
                 if (mapValues != null) {
                     lLinhas = new ArrayList<>();
-                    lLinhas.addAll(Linha.converteMapParaListaLinhas(mapValues));
+                    //lLinhas.addAll(Linha.converteMapParaListaLinhas(mapValues));
                     for(Linha umaLinha : lLinhas) {
                         umaLinha.setMunicipio(municipio);
                     }

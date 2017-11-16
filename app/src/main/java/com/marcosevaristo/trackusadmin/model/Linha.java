@@ -52,24 +52,16 @@ public class Linha implements Serializable {
         this.carros = carros;
     }
 
-    public static List<Linha> converteMapParaListaLinhas(Map<String, Object> lMapLinhas) {
+    public static List<Linha> converteMapParaListaLinhas(Map<String, Object> linhas) {
         List<Linha> lLinhas = new ArrayList<>();
         Linha linhaAux = new Linha();
-        boolean resultadoUnico = false;
-        for(String umaKeyAux : lMapLinhas.keySet()) {
-            if(lMapLinhas.get(umaKeyAux) instanceof Map && !umaKeyAux.equals("carros")) {
-                Map<String, Object> umaLinha = (Map<String, Object>) lMapLinhas.get(umaKeyAux);
-                linhaAux = new Linha();
-                for(String umAttr : umaLinha.keySet()) {
-                    montaUmAtributoDaLinha(linhaAux, umAttr, umaLinha.get(umAttr));
-                }
-                lLinhas.add(linhaAux);
-            } else {
-                resultadoUnico = true;
-                montaUmAtributoDaLinha(linhaAux, umaKeyAux, lMapLinhas.get(umaKeyAux));
+        for(String umaLinhaID : linhas.keySet()) {
+            Map<String, Object> mapUmaLinha = (Map<String, Object>) linhas.get(umaLinhaID);
+            for(String umAttrKey : mapUmaLinha.keySet()) {
+                montaUmAtributoDaLinha(linhaAux, umAttrKey, mapUmaLinha.get(umAttrKey));
             }
+            lLinhas.add(linhaAux);
         }
-        if(resultadoUnico) lLinhas.add(linhaAux);
         return lLinhas;
     }
 

@@ -12,16 +12,16 @@ import java.util.Map;
 public class Municipio implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
     private String nome;
     private List<Linha> linhas;
 
     public Municipio(){}
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getNome() {
@@ -44,35 +44,35 @@ public class Municipio implements Serializable {
         return sb.toString();
     }
 
-    public static List<Municipio> converteListMapParaListaMunicipios(List<Map<String, Object>> mapValues) {
+    public static List<Municipio> converteListMapParaListaMunicipios(Map<String, Object> mapValues) {
         List<Municipio> lMunicipios = new ArrayList<>();
-        Long idAux = null;
+        String idAux = null;
         String nomeAux = null;
         List<Linha> listLinhas = null;
         Municipio municipioAux;
 
-        for(Map<String, Object> umMunicipio : mapValues) {
-            if(umMunicipio != null) {
-                for(String umAtributoMun : umMunicipio.keySet()) {
-                    switch(umAtributoMun) {
-                        case "id":
-                            idAux = (Long) umMunicipio.get(umAtributoMun);
-                            break;
-                        case "nome":
-                            nomeAux = umMunicipio.get(umAtributoMun).toString();
-                            break;
-                        case "linhas":
-                            listLinhas = Linha.converteMapParaListaLinhas((Map)umMunicipio.get(umAtributoMun));
-                        default:
-                            break;
-                    }
+        for(String umMunicipioID : mapValues.keySet()) {
+            Map<String, Object> umMunicipioMap = (Map<String, Object>) mapValues.get(umMunicipioID);
+            for(String umAtributoMun : umMunicipioMap.keySet()) {
+                switch(umAtributoMun) {
+                    case "id":
+                        idAux = umMunicipioMap.get(umAtributoMun).toString();
+                        break;
+                    case "nome":
+                        nomeAux = umMunicipioMap.get(umAtributoMun).toString();
+                        break;
+                    case "linhas":
+                        listLinhas = Linha.converteMapParaListaLinhas((Map)umMunicipioMap.get(umAtributoMun));
+                    default:
+                        break;
                 }
-                municipioAux = new Municipio();
-                municipioAux.setId(idAux);
-                municipioAux.setNome(nomeAux);
-                municipioAux.setLinhas(listLinhas);
-                lMunicipios.add(municipioAux);
             }
+            municipioAux = new Municipio();
+            municipioAux.setId(idAux);
+            municipioAux.setNome(nomeAux);
+            municipioAux.setLinhas(listLinhas);
+            lMunicipios.add(municipioAux);
+
         }
 
         return lMunicipios;
