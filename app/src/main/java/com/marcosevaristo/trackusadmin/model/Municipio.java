@@ -1,9 +1,5 @@
 package com.marcosevaristo.trackusadmin.model;
 
-import android.support.annotation.TransitionRes;
-
-import com.google.firebase.database.Exclude;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

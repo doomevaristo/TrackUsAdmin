@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -23,16 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.activities.CadastroMunicipioActivity;
-import com.marcosevaristo.trackusadmin.activities.ConsultaLinhasActivity;
 import com.marcosevaristo.trackusadmin.adapters.MunicipiosAdapter;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Municipio;
-import com.marcosevaristo.trackusadmin.utils.CollectionUtils;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class AbaMunicipios extends Fragment implements View.OnClickListener{
@@ -99,6 +94,9 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
                 bundleAux.putSerializable("municipio", (Municipio)parent.getItemAtPosition(position));
                 intent.putExtras(bundleAux);
                 startActivity(intent);
+                if(isFabOpen) {
+                    animateFAB();
+                }
             }
         };
     }
@@ -146,7 +144,6 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
         int id = v.getId();
         switch (id){
             case R.id.fab_menu:
-                animateFAB();
                 break;
             case R.id.fab_add:
                 startActivity(new Intent(App.getAppContext(), CadastroMunicipioActivity.class));
@@ -154,8 +151,8 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
             case R.id.fab_search_municipios:
                 //TODO: pesquisar
                 break;
-
         }
+        animateFAB();
     }
 
     public void animateFAB(){

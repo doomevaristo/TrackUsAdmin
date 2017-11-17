@@ -11,12 +11,11 @@ import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.adapters.ViewPagerAdapter;
 import com.marcosevaristo.trackusadmin.fragments.AbaMunicipios;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setupToolbar();
         setContentView(R.layout.activity_main);
         setupTabLayout();
