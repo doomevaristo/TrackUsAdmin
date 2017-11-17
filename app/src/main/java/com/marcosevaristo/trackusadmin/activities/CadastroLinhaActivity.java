@@ -213,13 +213,14 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         linha.setNumero(etNumero.getText().toString());
         linha.setTitulo(etTituloLinha.getText().toString());
         linha.setSubtitulo(etSubtituloLinha.getText().toString());
+        List<String> listLatLgnStr = null;
         if(CollectionUtils.isNotEmpty(rota)) {
-            List<String> listLatLgnStr = new ArrayList<>();
-            for(LatLng umLatLng : rota) {
+            listLatLgnStr = new ArrayList<>();
+            for (LatLng umLatLng : rota) {
                 listLatLgnStr.add(GoogleMapsUtils.getLatLngToString(umLatLng));
             }
-            linha.setRota(listLatLgnStr);
         }
+        linha.setRota(listLatLgnStr);
     }
 
     @Override
@@ -265,7 +266,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
                 Marker lastMarker = gMap.addMarker(markerOptions);
                 markers.add(lastMarker);
-                if(markers.size() > 1) {
+                if(CollectionUtils.isNotEmpty(rota) || markers.size() > 1) {
                     traceRoute(lastMarker);
                 }
             }
@@ -280,7 +281,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
             for(Marker umMarker : markers) {
                 if(umMarker.equals(lastMarker)) {
-                    String srcParam = GoogleMapsUtils.getLatLngToString(markers.get(markers.indexOf(umMarker)-1).getPosition());
+                    String srcParam = GoogleMapsUtils.getLatLngToString(CollectionUtils.isNotEmpty(rota) ? rota.get(rota.size()-1) : markers.get(markers.indexOf(umMarker)-1).getPosition());
                     String destParam = GoogleMapsUtils.getLatLngToString(umMarker.getPosition());
                     String urlRequestRoute = GoogleMapsUtils.getUrlSearchRoute(srcParam, destParam);
 
@@ -327,5 +328,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         gMap.clear();
         if(CollectionUtils.isNotEmpty(rota)) rota.clear();
         if(CollectionUtils.isNotEmpty(markers)) markers.clear();
+        if(CollectionUtils.isNotEmpty(linha.getRota()));
     }
 }
