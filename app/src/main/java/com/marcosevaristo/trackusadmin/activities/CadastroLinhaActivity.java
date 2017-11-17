@@ -49,7 +49,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     private GoogleMap gMap;
 
     private List<Marker> markers;
-    private ArrayList<LatLng> points;
+    private ArrayList<LatLng> rota;
     private ProgressDialog progressDialog;
 
     private Municipio municipio;
@@ -83,6 +83,9 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         etNumero.setText(linha != null ? linha.getNumero() : null);
         etTituloLinha.setText(linha != null ? linha.getTitulo() : null);
         etSubtituloLinha.setText(linha != null ? linha.getSubtitulo() : null);
+        if(CollectionUtils.isNotEmpty(linha.getRota())) {
+            rota = (ArrayList<LatLng>) GoogleMapsUtils.getListLatLngFromListString(linha.getRota());
+        }
     }
 
     private void setupToolbar() {
@@ -185,7 +188,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
     @Override
     public void exclui() {
-        //TODO: verificar se está gravado antes de excluir para chamar só o novo()
         FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getNumero()).getRef().removeValue();
         Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.linha_excluida_sucesso,
                 linha.getNumero()+" - "+linha.getTitulo()), Toast.LENGTH_SHORT).show();
@@ -195,22 +197,29 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     @Override
     public void salva() {
         setupTelaNaLinha();
-        DatabaseReference referenciaFirebase = FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getNumero());
-        if(municipio.getId() == null) {
+        DatabaseReference referenciaFirebase = FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getId());
+        if(linha.getId() == null) {
             referenciaFirebase = referenciaFirebase.push();
-            municipio.setId(referenciaFirebase.getKey());
-            referenciaFirebase.setValue(municipio);
+            linha.setId(referenciaFirebase.getKey());
+            referenciaFirebase.setValue(linha);
         } else {
-            referenciaFirebase.setValue(municipio);
+            referenciaFirebase.setValue(linha);
         }
 
-        App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
+        App.toast(R.string.linh_salva_sucesso, linha.toString());
     }
 
     private void setupTelaNaLinha() {
         linha.setNumero(etNumero.getText().toString());
         linha.setTitulo(etTituloLinha.getText().toString());
         linha.setSubtitulo(etSubtituloLinha.getText().toString());
+        if(CollectionUtils.isNotEmpty(rota)) {
+            List<String> listLatLgnStr = new ArrayList<>();
+            for(LatLng umLatLng : rota) {
+                listLatLgnStr.add(GoogleMapsUtils.getLatLngToString(umLatLng));
+            }
+            linha.setRota(listLatLgnStr);
+        }
     }
 
     @Override
@@ -220,7 +229,9 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         if(linha.getMunicipio() != null && Geocoder.isPresent()) {
             setupLocationsOnMap();
         }
-
+        if(CollectionUtils.isNotEmpty(rota)) {
+            gMap.addPolyline(GoogleMapsUtils.desenhaRota(rota));
+        }
         gMap.setOnMapClickListener(getOnMapClickListenerAddMarker());
     }
 
@@ -268,7 +279,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             progressDialog.show();
 
             for(Marker umMarker : markers) {
-                if(points == null) points = new ArrayList<>();
                 if(umMarker.equals(lastMarker)) {
                     String srcParam = GoogleMapsUtils.getLatLngToString(markers.get(markers.indexOf(umMarker)-1).getPosition());
                     String destParam = GoogleMapsUtils.getLatLngToString(umMarker.getPosition());
@@ -281,6 +291,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                                     MapDirectionsParser parser = new MapDirectionsParser();
                                     List<List<HashMap<String, String>>> routes = parser.parse(response);
                                     LatLng position = null;
+                                    ArrayList<LatLng> points = new ArrayList<>();
                                     for (int i = 0; i < routes.size(); i++) {
                                         List<HashMap<String, String>> path = routes.get(i);
                                         for (int j = 0; j < path.size(); j++) {
@@ -293,6 +304,8 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                                             points.add(position);
                                         }
                                     }
+                                    if(CollectionUtils.isEmpty(rota)) rota = new ArrayList<>();
+                                    rota.addAll(points);
                                     gMap.addPolyline(GoogleMapsUtils.desenhaRota(points));
                                     points.clear();
                                     progressDialog.dismiss();
@@ -312,7 +325,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
     private void clearMap() {
         gMap.clear();
-        if(CollectionUtils.isNotEmpty(points)) points.clear();
+        if(CollectionUtils.isNotEmpty(rota)) rota.clear();
         if(CollectionUtils.isNotEmpty(markers)) markers.clear();
     }
 }

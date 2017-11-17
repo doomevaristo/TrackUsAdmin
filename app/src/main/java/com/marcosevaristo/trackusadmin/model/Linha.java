@@ -1,5 +1,6 @@
 package com.marcosevaristo.trackusadmin.model;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ public class Linha implements Serializable {
     private String titulo;
     private String subtitulo;
     private List<Carro> carros;
+    private List<String> rota;
 
     private static final long serialVersionUID = 1L;
 
@@ -115,5 +117,13 @@ public class Linha implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<String> getRota() {
+        return rota;
+    }
+
+    public void setRota(List<String> rota) {
+        this.rota = rota;
     }
 }

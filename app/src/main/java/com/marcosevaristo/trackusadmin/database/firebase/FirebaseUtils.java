@@ -18,13 +18,13 @@ public class FirebaseUtils {
         return database;
     }
 
-    public static DatabaseReference getLinhasReference(String municipioID, String numeroLinha) {
+    public static DatabaseReference getLinhasReference(String municipioID, String linhaID) {
         DatabaseReference databaseReferenceLinhas = null;
         if(municipioID != null) {
             databaseReferenceLinhas = getDatabase().getReference().child(NODE_MUNICIPIOS)
                     .child(municipioID).child(NODE_LINHAS);
-            if(StringUtils.isNotBlank(numeroLinha)) {
-                databaseReferenceLinhas = databaseReferenceLinhas.child(numeroLinha);
+            if(StringUtils.isNotBlank(linhaID)) {
+                databaseReferenceLinhas = databaseReferenceLinhas.child(linhaID);
             }
         }
         return databaseReferenceLinhas;

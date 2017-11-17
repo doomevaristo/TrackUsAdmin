@@ -10,7 +10,7 @@ public class Municipio implements Serializable {
 
     private String id;
     private String nome;
-    private List<Linha> linhas;
+    private Map<String, Linha> linhas;
 
     public Municipio(){}
 
@@ -26,49 +26,15 @@ public class Municipio implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public List<Linha> getLinhas() {
+    public Map<String, Linha> getLinhas() {
         return linhas;
     }
-    public void setLinhas(List<Linha> linhas) {
+    public void setLinhas(Map<String, Linha> linhas) {
         this.linhas = linhas;
     }
 
     @Override
     public String toString() {
         return this.nome;
-    }
-
-    public static List<Municipio> converteListMapParaListaMunicipios(Map<String, Object> mapValues) {
-        List<Municipio> lMunicipios = new ArrayList<>();
-        String idAux = null;
-        String nomeAux = null;
-        List<Linha> listLinhas = null;
-        Municipio municipioAux;
-
-        for(String umMunicipioID : mapValues.keySet()) {
-            Map<String, Object> umMunicipioMap = (Map<String, Object>) mapValues.get(umMunicipioID);
-            for(String umAtributoMun : umMunicipioMap.keySet()) {
-                switch(umAtributoMun) {
-                    case "id":
-                        idAux = umMunicipioMap.get(umAtributoMun).toString();
-                        break;
-                    case "nome":
-                        nomeAux = umMunicipioMap.get(umAtributoMun).toString();
-                        break;
-                    case "linhas":
-                        listLinhas = Linha.converteMapParaListaLinhas((Map)umMunicipioMap.get(umAtributoMun));
-                    default:
-                        break;
-                }
-            }
-            municipioAux = new Municipio();
-            municipioAux.setId(idAux);
-            municipioAux.setNome(nomeAux);
-            municipioAux.setLinhas(listLinhas);
-            lMunicipios.add(municipioAux);
-
-        }
-
-        return lMunicipios;
     }
 }

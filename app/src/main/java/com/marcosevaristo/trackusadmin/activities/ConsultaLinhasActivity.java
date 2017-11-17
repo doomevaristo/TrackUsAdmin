@@ -27,6 +27,7 @@ import com.marcosevaristo.trackusadmin.adapters.NumericKeyBoardTransformationMet
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Linha;
 import com.marcosevaristo.trackusadmin.model.Municipio;
+import com.marcosevaristo.trackusadmin.utils.MapUtils;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -66,8 +67,18 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         lView.setAdapter(null);
         lView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
-        FirebaseUtils.getLinhasReference(municipio.getId(), argBusca).getRef()
-                .addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
+        if(municipio != null && MapUtils.isEmpty(municipio.getLinhas())) {
+            FirebaseUtils.getLinhasReference(municipio.getId(), argBusca).getRef()
+                    .addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
+        } else {
+            lLinhas = new ArrayList<>();
+            lLinhas.addAll(municipio.getLinhas().values());
+            for(Linha umaLinha : lLinhas) {
+                umaLinha.setMunicipio(municipio);
+            }
+            setupListAdapter();
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     private ValueEventListener getEventoBuscaLinhasFirebase() {
@@ -77,7 +88,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
                 Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
                 if (mapValues != null) {
                     lLinhas = new ArrayList<>();
-                    //lLinhas.addAll(Linha.converteMapParaListaLinhas(mapValues));
+                    lLinhas.addAll(Linha.converteMapParaListaLinhas(mapValues));
                     for(Linha umaLinha : lLinhas) {
                         umaLinha.setMunicipio(municipio);
                     }

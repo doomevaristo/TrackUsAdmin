@@ -119,7 +119,7 @@
 
     <include
         layout="@layout/floating_action_button"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:id="@+id/floating_action_buttons"/>
     <!-- END FAB -->

@@ -41,4 +41,5 @@
     <string name="textLabelFabDel">Excluir</string>
     <string name="textLabelFabLinhasMunicipio">Consultar linhas</string>
     <string name="municipio_salvo_sucesso">O município %1$s foi salvo com sucesso.</string>
+    <string name="linh_salva_sucesso">A linha %1$s foi salva com sucesso.</string>
 </resources>

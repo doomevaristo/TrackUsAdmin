@@ -114,15 +114,18 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
             fabSave.startAnimation(fab_close);
-            fabDel.startAnimation(fab_close);
-            fabClone.startAnimation(fab_close);
-            fabLinhas.startAnimation(fab_close);
-
+            if(municipio != null && municipio.getId() != null) {
+                fabDel.startAnimation(fab_close);
+                fabClone.startAnimation(fab_close);
+                fabLinhas.startAnimation(fab_close);
+            }
             fabAdd.setClickable(false);
             fabSave.setClickable(false);
-            fabDel.setClickable(false);
-            fabClone.setClickable(false);
-            fabLinhas.setClickable(false);
+            if(municipio != null && municipio.getId() != null) {
+                fabDel.setClickable(false);
+                fabClone.setClickable(false);
+                fabLinhas.setClickable(false);
+            }
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
@@ -130,6 +133,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabSave.startAnimation(fab_open);
             fabClone.startAnimation(fab_open);
             if(municipio != null && municipio.getId() != null) {
+                fabClone.startAnimation(fab_open);
                 fabDel.startAnimation(fab_open);
                 fabLinhas.startAnimation(fab_open);
             }
@@ -138,6 +142,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabSave.setClickable(true);
             fabClone.setClickable(true);
             if(municipio != null && municipio.getId() != null) {
+                fabClone.setClickable(true);
                 fabDel.setClickable(true);
                 fabLinhas.setClickable(true);
             }

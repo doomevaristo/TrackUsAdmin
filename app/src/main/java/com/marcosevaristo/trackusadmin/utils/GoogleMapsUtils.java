@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GoogleMapsUtils  {
 
@@ -31,5 +32,14 @@ public class GoogleMapsUtils  {
 
     public static String getLatLngToString(LatLng latLng) {
         return latLng != null ? latLng.latitude + "," + latLng.longitude : "";
+    }
+
+    public static List<LatLng> getListLatLngFromListString(List<String> lLatLngStr) {
+        List<LatLng> lLatLngAux = new ArrayList<>();
+        for(String umLatLngStr : lLatLngStr) {
+            lLatLngAux.add(new LatLng(Double.valueOf(umLatLngStr.substring(0,umLatLngStr.indexOf(","))),
+                    Double.valueOf(umLatLngStr.substring(umLatLngStr.indexOf(",")+1, umLatLngStr.length()))));
+        }
+        return lLatLngAux;
     }
 }
