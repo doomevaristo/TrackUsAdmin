@@ -18,6 +18,9 @@ import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Municipio;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CadastroMunicipioActivity extends AppCompatActivity implements Crud, View.OnClickListener{
 
     private Boolean isFabOpen = false;
@@ -73,7 +76,9 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
                 municipio.setId(referenciaFirebase.getKey());
                 referenciaFirebase.setValue(municipio);
             } else {
-                referenciaFirebase.setValue(municipio);
+                Map<String, Object> mapValues = new HashMap<>();
+                mapValues.put("nome", municipio.getNome());
+                referenciaFirebase.updateChildren(mapValues);
             }
             App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
         }

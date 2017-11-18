@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
@@ -214,7 +215,12 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                 linha.setId(referenciaFirebase.getKey());
                 referenciaFirebase.setValue(linha);
             } else {
-                referenciaFirebase.setValue(linha);
+                Map<String, Object> mapValues = new HashMap<>();
+                mapValues.put("numero", linha.getNumero());
+                mapValues.put("titulo", linha.getTitulo());
+                mapValues.put("subtitulo", linha.getSubtitulo());
+                mapValues.put("rota", linha.getRota());
+                referenciaFirebase.updateChildren(mapValues);
             }
             App.toast(R.string.linha_salva_sucesso, linha.toString());
         }
