@@ -42,6 +42,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
     private Municipio municipio;
     private List<Linha> lLinhas;
     private ProgressBar progressBar;
+    private String ultimaBusca = StringUtils.emptyString();
 
     private FloatingActionButton fabMenu,fabAdd,fabSearch;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
@@ -67,7 +68,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         lView.setAdapter(null);
         lView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
-        if(municipio != null && MapUtils.isEmpty(municipio.getLinhas())) {
+        if(municipio != null) {
             FirebaseUtils.getLinhasReference(municipio.getId(), argBusca).getRef()
                     .addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
         } else {
@@ -85,17 +86,21 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
-                if (mapValues != null) {
-                    lLinhas = new ArrayList<>();
-                    lLinhas.addAll(Linha.converteMapParaListaLinhas(mapValues));
-                    for(Linha umaLinha : lLinhas) {
-                        umaLinha.setMunicipio(municipio);
+                if(dataSnapshot != null) {
+                    Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
+                    if(MapUtils.isNotEmpty(mapValues)) {
+                        lLinhas = new ArrayList<>();
+                        for(DataSnapshot umDataSnapshot : dataSnapshot.getChildren()) {
+                            Linha umaLinha = umDataSnapshot.getValue(Linha.class);
+                            umaLinha.setMunicipio(municipio);
+                            lLinhas.add(umaLinha);
+                        }
+                        setupListAdapter();
+                        progressBar.setVisibility(View.GONE);
+                        return;
                     }
-                    setupListAdapter();
-                } else {
-                    Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
                 }
+                Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -146,7 +151,6 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         int id = v.getId();
         switch (id){
             case R.id.fab_menu:
-                animateFAB();
                 break;
             case R.id.fab_add:
                 Intent intent = new Intent(App.getAppContext(), CadastroLinhaActivity.class);
@@ -166,15 +170,15 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
                     busca.setTypeface(Typeface.SANS_SERIF);
                     imm.showSoftInput(busca, InputMethodManager.SHOW_IMPLICIT);
                 } else {
-                    String arg = busca.getText().toString();
-                    setupComponents(arg);
+                    ultimaBusca = busca.getText().toString();
+                    setupComponents(ultimaBusca);
                     busca.setText("");
                     busca.setVisibility(View.GONE);
                     imm.hideSoftInputFromWindow(busca.getWindowToken(), 0);
                 }
                 break;
-
         }
+        animateFAB();
     }
 
     public void animateFAB(){
@@ -196,5 +200,11 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
 
             isFabOpen = true;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupComponents(ultimaBusca);
     }
 }

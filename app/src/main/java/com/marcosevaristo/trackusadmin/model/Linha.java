@@ -55,39 +55,6 @@ public class Linha implements Serializable {
         this.carros = carros;
     }
 
-    public static List<Linha> converteMapParaListaLinhas(Map<String, Object> linhas) {
-        List<Linha> lLinhas = new ArrayList<>();
-        Linha linhaAux = new Linha();
-        for(String umaLinhaID : linhas.keySet()) {
-            Map<String, Object> mapUmaLinha = (Map<String, Object>) linhas.get(umaLinhaID);
-            for(String umAttrKey : mapUmaLinha.keySet()) {
-                montaUmAtributoDaLinha(linhaAux, umAttrKey, mapUmaLinha.get(umAttrKey));
-            }
-            lLinhas.add(linhaAux);
-        }
-        return lLinhas;
-    }
-
-    private static void montaUmAtributoDaLinha(Linha linhaAux, String atributo, Object valor) {
-        switch(atributo) {
-            case "id":
-                linhaAux.setId(valor.toString());
-            case "numero":
-                linhaAux.setNumero(valor.toString());
-                break;
-            case "titulo":
-                linhaAux.setTitulo(valor.toString());
-                break;
-            case "subtitulo":
-                linhaAux.setSubtitulo(valor.toString());
-                break;
-            case "carros":
-                linhaAux.setCarros(Carro.converteMapParaListCarros((Map) valor));
-            default:
-                break;
-        }
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

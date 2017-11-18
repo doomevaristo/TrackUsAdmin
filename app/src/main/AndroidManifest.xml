@@ -28,7 +28,8 @@
         <activity
             android:name="com.marcosevaristo.trackusadmin.activities.MainActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,9 +37,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.marcosevaristo.trackusadmin.activities.ConsultaLinhasActivity" />
-        <activity android:name="com.marcosevaristo.trackusadmin.activities.CadastroLinhaActivity" />
-        <activity android:name="com.marcosevaristo.trackusadmin.activities.CadastroMunicipioActivity" />
+        <activity
+            android:name="com.marcosevaristo.trackusadmin.activities.ConsultaLinhasActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="com.marcosevaristo.trackusadmin.activities.CadastroLinhaActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="com.marcosevaristo.trackusadmin.activities.CadastroMunicipioActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -48,5 +55,4 @@
             android:value="@integer/google_play_services_version" />
 
     </application>
-
 </manifest>

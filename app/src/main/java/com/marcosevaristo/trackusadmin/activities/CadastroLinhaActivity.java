@@ -33,6 +33,7 @@ import com.marcosevaristo.trackusadmin.model.Municipio;
 import com.marcosevaristo.trackusadmin.utils.CollectionUtils;
 import com.marcosevaristo.trackusadmin.utils.GoogleMapsUtils;
 import com.marcosevaristo.trackusadmin.utils.MapDirectionsParser;
+import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -85,7 +86,11 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         etSubtituloLinha.setText(linha != null ? linha.getSubtitulo() : null);
         if(CollectionUtils.isNotEmpty(linha.getRota())) {
             rota = (ArrayList<LatLng>) GoogleMapsUtils.getListLatLngFromListString(linha.getRota());
+        } else {
+            clearMap();
         }
+
+        etNumero.requestFocus();
     }
 
     private void setupToolbar() {
@@ -117,32 +122,38 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
-            fabDel.startAnimation(fab_close);
             fabSave.startAnimation(fab_close);
-            fabClr.startAnimation(fab_close);
-            fabClone.startAnimation(fab_close);
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.startAnimation(fab_close);
+                fabClr.startAnimation(fab_close);
+                fabClone.startAnimation(fab_close);
+            }
 
             fabAdd.setClickable(false);
             fabSave.setClickable(false);
-            fabDel.setClickable(false);
-            fabClr.setClickable(false);
-            fabClone.setClickable(false);
-
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.setClickable(false);
+                fabClr.setClickable(false);
+                fabClone.setClickable(false);
+            }
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
             fabSave.startAnimation(fab_open);
-            fabDel.startAnimation(fab_open);
-            fabClr.startAnimation(fab_open);
-            fabClone.startAnimation(fab_open);
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.startAnimation(fab_open);
+                fabClr.startAnimation(fab_open);
+                fabClone.startAnimation(fab_open);
+            }
 
             fabAdd.setClickable(true);
             fabSave.setClickable(true);
-            fabDel.setClickable(true);
-            fabClr.setClickable(true);
-            fabClone.setClickable(true);
-
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.setClickable(true);
+                fabClr.setClickable(true);
+                fabClone.setClickable(true);
+            }
             isFabOpen = true;
         }
     }
@@ -150,6 +161,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        animateFAB();
         switch (id){
             case R.id.fab_menu:
                 break;
@@ -169,7 +181,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                 //TODO: clonar
                 break;
         }
-        animateFAB();
     }
 
     @Override
@@ -188,7 +199,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
     @Override
     public void exclui() {
-        FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getNumero()).getRef().removeValue();
+        FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getId()).removeValue();
         Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.linha_excluida_sucesso,
                 linha.getNumero()+" - "+linha.getTitulo()), Toast.LENGTH_SHORT).show();
         novo();
@@ -196,22 +207,36 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
 
     @Override
     public void salva() {
-        setupTelaNaLinha();
-        DatabaseReference referenciaFirebase = FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getId());
-        if(linha.getId() == null) {
-            referenciaFirebase = referenciaFirebase.push();
-            linha.setId(referenciaFirebase.getKey());
-            referenciaFirebase.setValue(linha);
-        } else {
-            referenciaFirebase.setValue(linha);
+        if(setupTelaNaLinha()) {
+            DatabaseReference referenciaFirebase = FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getId());
+            if(linha.getId() == null) {
+                referenciaFirebase = referenciaFirebase.push();
+                linha.setId(referenciaFirebase.getKey());
+                referenciaFirebase.setValue(linha);
+            } else {
+                referenciaFirebase.setValue(linha);
+            }
+            App.toast(R.string.linha_salva_sucesso, linha.toString());
         }
-
-        App.toast(R.string.linh_salva_sucesso, linha.toString());
     }
 
-    private void setupTelaNaLinha() {
-        linha.setNumero(etNumero.getText().toString());
-        linha.setTitulo(etTituloLinha.getText().toString());
+    private boolean setupTelaNaLinha() {
+        if(StringUtils.isNotBlank(etNumero.getText().toString())) {
+            linha.setNumero(etNumero.getText().toString());
+        } else {
+            App.toast(R.string.campo_x_obrigatorio, "Número");
+            etNumero.setError(App.getAppContext().getString(R.string.campo_obrigatorio));
+            return false;
+        }
+
+        if(StringUtils.isNotBlank(etTituloLinha.getText().toString())) {
+            linha.setTitulo(etTituloLinha.getText().toString());
+        } else {
+            App.toast(R.string.campo_x_obrigatorio, "Título");
+            etTituloLinha.setError(App.getAppContext().getString(R.string.campo_obrigatorio));
+            return false;
+        }
+
         linha.setSubtitulo(etSubtituloLinha.getText().toString());
         List<String> listLatLgnStr = null;
         if(CollectionUtils.isNotEmpty(rota)) {
@@ -219,8 +244,13 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             for (LatLng umLatLng : rota) {
                 listLatLgnStr.add(GoogleMapsUtils.getLatLngToString(umLatLng));
             }
+        } else {
+            App.toast(R.string.campo_x_obrigatorio, "Rota");
+            return false;
         }
         linha.setRota(listLatLgnStr);
+
+        return true;
     }
 
     @Override
@@ -325,9 +355,9 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     }
 
     private void clearMap() {
-        gMap.clear();
+        if(gMap != null) gMap.clear();
         if(CollectionUtils.isNotEmpty(rota)) rota.clear();
         if(CollectionUtils.isNotEmpty(markers)) markers.clear();
-        if(CollectionUtils.isNotEmpty(linha.getRota()));
+        if(linha != null && CollectionUtils.isNotEmpty(linha.getRota()));
     }
 }

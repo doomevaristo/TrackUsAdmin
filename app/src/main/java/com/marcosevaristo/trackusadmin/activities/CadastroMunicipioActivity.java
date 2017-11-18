@@ -16,6 +16,7 @@ import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Municipio;
+import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 public class CadastroMunicipioActivity extends AppCompatActivity implements Crud, View.OnClickListener{
 
@@ -54,38 +55,44 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     public void edita(Bundle bundle) {
         municipio = (Municipio) bundle.get("municipio");
         setaMunicipioEmTela(municipio);
-
     }
 
     @Override
     public void exclui() {
-        FirebaseUtils.getMunicipiosReference(municipio.getId()).getRef().removeValue();
+        FirebaseUtils.getMunicipiosReference(municipio.getId()).removeValue();
         Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.municipio_excluido_sucesso, municipio.getId().toString()), Toast.LENGTH_SHORT).show();
         novo();
     }
 
     @Override
     public void salva() {
-        setupTelaNoMunicipio();
-        DatabaseReference referenciaFirebase = FirebaseUtils.getMunicipiosReference(municipio.getId());
-        if(municipio.getId() == null) {
-            referenciaFirebase = referenciaFirebase.push();
-            municipio.setId(referenciaFirebase.getKey());
-            referenciaFirebase.setValue(municipio);
-        } else {
-            referenciaFirebase.setValue(municipio);
+        if(setupTelaNoMunicipio()) {
+            DatabaseReference referenciaFirebase = FirebaseUtils.getMunicipiosReference(municipio.getId());
+            if(municipio.getId() == null) {
+                referenciaFirebase = referenciaFirebase.push();
+                municipio.setId(referenciaFirebase.getKey());
+                referenciaFirebase.setValue(municipio);
+            } else {
+                referenciaFirebase.setValue(municipio);
+            }
+            App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
         }
-
-        App.toast(R.string.municipio_salvo_sucesso, municipio.toString());
     }
 
-    private void setupTelaNoMunicipio() {
-        municipio.setNome(etNome.getText().toString());
+    private boolean setupTelaNoMunicipio() {
+        if(StringUtils.isNotBlank(etNome.getText().toString())) {
+            municipio.setNome(etNome.getText().toString());
+        } else {
+            App.toast(R.string.campo_x_obrigatorio, "Nome");
+            return false;
+        }
+        return true;
     }
 
     private void setaMunicipioEmTela(Municipio municipio) {
         etNome = (TextInputEditText) findViewById(R.id.etNomeMunicipio);
         etNome.setText(municipio != null ? municipio.getNome() : null);
+        etNome.requestFocus();
     }
 
     private void setupFloatingActionButtons() {
@@ -114,14 +121,15 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
             fabSave.startAnimation(fab_close);
-            if(municipio != null && municipio.getId() != null) {
+            if(municipio != null && StringUtils.isNotBlank(municipio.getId())) {
                 fabDel.startAnimation(fab_close);
                 fabClone.startAnimation(fab_close);
                 fabLinhas.startAnimation(fab_close);
             }
+
             fabAdd.setClickable(false);
             fabSave.setClickable(false);
-            if(municipio != null && municipio.getId() != null) {
+            if(municipio != null && StringUtils.isNotBlank(municipio.getId())) {
                 fabDel.setClickable(false);
                 fabClone.setClickable(false);
                 fabLinhas.setClickable(false);
@@ -132,7 +140,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabAdd.startAnimation(fab_open);
             fabSave.startAnimation(fab_open);
             fabClone.startAnimation(fab_open);
-            if(municipio != null && municipio.getId() != null) {
+            if(municipio != null && StringUtils.isNotBlank(municipio.getId())) {
                 fabClone.startAnimation(fab_open);
                 fabDel.startAnimation(fab_open);
                 fabLinhas.startAnimation(fab_open);
@@ -141,7 +149,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
             fabAdd.setClickable(true);
             fabSave.setClickable(true);
             fabClone.setClickable(true);
-            if(municipio != null && municipio.getId() != null) {
+            if(municipio != null && StringUtils.isNotBlank(municipio.getId())) {
                 fabClone.setClickable(true);
                 fabDel.setClickable(true);
                 fabLinhas.setClickable(true);
@@ -154,6 +162,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        animateFAB();
         switch (id){
             case R.id.fab_menu:
                 break;
@@ -177,6 +186,5 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
                 //TODO:clonar
                 break;
         }
-        animateFAB();
     }
 }
