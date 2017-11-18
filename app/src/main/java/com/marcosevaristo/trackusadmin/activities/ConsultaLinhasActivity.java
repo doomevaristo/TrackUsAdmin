@@ -86,22 +86,19 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null) {
-                    Map<String, Object> mapValues = (Map<String, Object>) dataSnapshot.getValue();
-                    if(MapUtils.isNotEmpty(mapValues)) {
-                        lLinhas = new ArrayList<>();
-                        for(DataSnapshot umDataSnapshot : dataSnapshot.getChildren()) {
-                            Linha umaLinha = umDataSnapshot.getValue(Linha.class);
-                            umaLinha.setMunicipio(municipio);
-                            lLinhas.add(umaLinha);
-                        }
-                        setupListAdapter();
-                        progressBar.setVisibility(View.GONE);
-                        return;
+                if(dataSnapshot != null && dataSnapshot.getChildren() != null) {
+                    lLinhas = new ArrayList<>();
+                    for(DataSnapshot umDataSnapshot : dataSnapshot.getChildren()) {
+                        Linha umaLinha = umDataSnapshot.getValue(Linha.class);
+                        umaLinha.setMunicipio(municipio);
+                        lLinhas.add(umaLinha);
                     }
+                    setupListAdapter();
+                    progressBar.setVisibility(View.GONE);
+                    return;
+                } else {
+                    Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
                 }
-                Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
             }
 
             @Override
