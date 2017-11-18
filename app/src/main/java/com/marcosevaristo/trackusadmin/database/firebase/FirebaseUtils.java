@@ -20,9 +20,8 @@ public class FirebaseUtils {
 
     public static DatabaseReference getLinhasReference(String municipioID, String linhaID) {
         DatabaseReference databaseReferenceLinhas = null;
-        if(municipioID != null) {
-            databaseReferenceLinhas = getDatabase().getReference().child(NODE_MUNICIPIOS)
-                    .child(municipioID).child(NODE_LINHAS);
+        if(StringUtils.isNotBlank(municipioID)) {
+            databaseReferenceLinhas = getMunicipiosReference(municipioID).child(NODE_LINHAS);
             if(StringUtils.isNotBlank(linhaID)) {
                 databaseReferenceLinhas = databaseReferenceLinhas.child(linhaID);
             }
@@ -32,7 +31,7 @@ public class FirebaseUtils {
 
     public static DatabaseReference getMunicipiosReference(String municipioID) {
         DatabaseReference databaseReferenceMunicipios = getDatabase().getReference().child(NODE_MUNICIPIOS);
-        if(municipioID != null) {
+        if(StringUtils.isNotBlank(municipioID)) {
             databaseReferenceMunicipios = databaseReferenceMunicipios.child(municipioID);
         }
         return databaseReferenceMunicipios;
