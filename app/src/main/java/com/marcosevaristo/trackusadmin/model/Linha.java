@@ -16,7 +16,6 @@ public class Linha implements Serializable {
     private String numero;
     private String titulo;
     private String subtitulo;
-    private List<Carro> carros;
     private List<String> rota;
 
     private static final long serialVersionUID = 1L;
@@ -45,14 +44,6 @@ public class Linha implements Serializable {
 
     public void setSubtitulo(String subtitulo) {
         this.subtitulo = subtitulo;
-    }
-
-    public List<Carro> getCarros() {
-        return carros;
-    }
-
-    public void setCarros(List<Carro> carros) {
-        this.carros = carros;
     }
 
     @Override

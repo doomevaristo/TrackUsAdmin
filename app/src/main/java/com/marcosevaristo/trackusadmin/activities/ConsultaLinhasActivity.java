@@ -99,6 +99,8 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
                 } else {
                     Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
