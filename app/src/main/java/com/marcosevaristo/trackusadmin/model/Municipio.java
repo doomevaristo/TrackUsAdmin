@@ -1,8 +1,6 @@
 package com.marcosevaristo.trackusadmin.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Municipio implements Serializable {

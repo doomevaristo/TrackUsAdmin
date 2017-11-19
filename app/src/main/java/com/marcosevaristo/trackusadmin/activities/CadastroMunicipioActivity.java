@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.marcosevaristo.trackusadmin.App;
@@ -63,7 +62,7 @@ public class CadastroMunicipioActivity extends AppCompatActivity implements Crud
     @Override
     public void exclui() {
         FirebaseUtils.getMunicipiosReference(municipio.getId()).removeValue();
-        Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.municipio_excluido_sucesso, municipio.getId().toString()), Toast.LENGTH_SHORT).show();
+        App.toast(R.string.municipio_excluido_sucesso, municipio.getNome());
         novo();
     }
 

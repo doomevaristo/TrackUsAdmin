@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -46,7 +45,7 @@ import java.util.Map;
 public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
     private TextInputEditText etNumero, etTituloLinha, etSubtituloLinha;
-    private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabClr,fabClone;
+    private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabUndoLast,fabClr,fabClone;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
 
@@ -103,6 +102,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
         fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
         fabSave = (FloatingActionButton)findViewById(R.id.fab_save);
+        fabUndoLast = (FloatingActionButton)findViewById(R.id.fab_undo_last);
         fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
         fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
 
@@ -116,6 +116,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         fabSave.setOnClickListener(this);
         fabDel.setOnClickListener(this);
         fabClr.setOnClickListener(this);
+        fabUndoLast.setOnClickListener(this);
         fabClone.setOnClickListener(this);
     }
 
@@ -124,17 +125,19 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
             fabSave.startAnimation(fab_close);
+            fabClr.startAnimation(fab_close);
+            fabUndoLast.startAnimation(fab_close);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.startAnimation(fab_close);
-                fabClr.startAnimation(fab_close);
                 fabClone.startAnimation(fab_close);
             }
 
             fabAdd.setClickable(false);
             fabSave.setClickable(false);
+            fabClr.setClickable(false);
+            fabUndoLast.setClickable(false);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.setClickable(false);
-                fabClr.setClickable(false);
                 fabClone.setClickable(false);
             }
             isFabOpen = false;
@@ -142,17 +145,19 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
             fabSave.startAnimation(fab_open);
+            fabClr.startAnimation(fab_open);
+            fabUndoLast.startAnimation(fab_open);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.startAnimation(fab_open);
-                fabClr.startAnimation(fab_open);
                 fabClone.startAnimation(fab_open);
             }
 
             fabAdd.setClickable(true);
             fabSave.setClickable(true);
+            fabClr.setClickable(true);
+            fabUndoLast.setClickable(true);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.setClickable(true);
-                fabClr.setClickable(true);
                 fabClone.setClickable(true);
             }
             isFabOpen = true;
@@ -178,6 +183,9 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             case R.id.fab_clear:
                 clearMap();
                 break;
+            case R.id.fab_undo_last:
+                clearLastMarker();
+                break;
             case R.id.fab_clone:
                 //TODO: clonar
                 break;
@@ -201,8 +209,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     @Override
     public void exclui() {
         FirebaseUtils.getLinhasReference(linha.getMunicipio().getId(), linha.getId()).removeValue();
-        Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.linha_excluida_sucesso,
-                linha.getNumero()+" - "+linha.getTitulo()), Toast.LENGTH_SHORT).show();
+        App.toast(R.string.linha_excluida_sucesso, linha.toString());
         novo();
     }
 
@@ -365,5 +372,9 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         if(CollectionUtils.isNotEmpty(rota)) rota.clear();
         if(CollectionUtils.isNotEmpty(markers)) markers.clear();
         if(linha != null && CollectionUtils.isNotEmpty(linha.getRota()));
+    }
+
+    private void clearLastMarker() {
+        
     }
 }

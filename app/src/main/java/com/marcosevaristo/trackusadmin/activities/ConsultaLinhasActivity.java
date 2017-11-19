@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,12 +26,10 @@ import com.marcosevaristo.trackusadmin.adapters.NumericKeyBoardTransformationMet
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.model.Linha;
 import com.marcosevaristo.trackusadmin.model.Municipio;
-import com.marcosevaristo.trackusadmin.utils.MapUtils;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class ConsultaLinhasActivity extends AppCompatActivity implements View.OnClickListener{
@@ -97,7 +94,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
                     progressBar.setVisibility(View.GONE);
                     return;
                 } else {
-                    Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
+                    App.toast(R.string.nenhum_resultado);
                 }
 
                 progressBar.setVisibility(View.GONE);

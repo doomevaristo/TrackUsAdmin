@@ -1,12 +1,9 @@
 package com.marcosevaristo.trackusadmin.model;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Linha implements Serializable {
 

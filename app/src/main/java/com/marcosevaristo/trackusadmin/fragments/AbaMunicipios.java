@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -114,7 +113,7 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
                     }
                     setupListAdapter();
                 } else {
-                    Toast.makeText(App.getAppContext(), R.string.nenhum_resultado, Toast.LENGTH_LONG).show();
+                    App.toast(R.string.nenhum_resultado);
                 }
                 progressBar.setVisibility(View.GONE);
             }

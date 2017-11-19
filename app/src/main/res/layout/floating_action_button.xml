@@ -5,17 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/label_fab_del"
-        android:layout_toLeftOf="@+id/fab_del"
-        android:layout_toStartOf="@+id/fab_del"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="@string/textLabelFabDel"
-        android:textSize="@dimen/textDefaultSize"
-        android:visibility="invisible"/>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_del"
         android:src="@drawable/ic_delete_black_24dp"
@@ -34,17 +23,6 @@
         app:pressedTranslationZ="12dp"
         android:layout_gravity="bottom|end"
         app:fabSize="mini"/>
-
-    <TextView
-        android:id="@+id/label_fab_save"
-        android:layout_toLeftOf="@+id/fab_del"
-        android:layout_toStartOf="@+id/fab_del"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="@string/textLabelFabDel"
-        android:textSize="@dimen/textDefaultSize"
-        android:visibility="invisible"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_save"
@@ -65,17 +43,6 @@
         android:layout_gravity="bottom|end"
         app:fabSize="mini"/>
 
-    <TextView
-        android:id="@+id/label_fab_clone"
-        android:layout_toLeftOf="@+id/fab_clone"
-        android:layout_toStartOf="@+id/fab_clone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="@string/textLabelFabClone"
-        android:textSize="@dimen/textDefaultSize"
-        android:visibility="invisible"/>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_clone"
         android:src="@drawable/ic_content_copy_black_24dp"
@@ -94,17 +61,6 @@
         app:pressedTranslationZ="12dp"
         android:layout_gravity="bottom|end"
         app:fabSize="mini"/>
-
-    <TextView
-        android:id="@+id/label_fab_add"
-        android:layout_toLeftOf="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="@string/textLabelFabAdd"
-        android:textSize="@dimen/textDefaultSize"
-        android:layout_toStartOf="@+id/fab_add"
-        android:visibility="invisible"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add"
