@@ -86,7 +86,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null && dataSnapshot.getChildren() != null) {
+                if(dataSnapshot != null && dataSnapshot.getChildren().iterator().hasNext()) {
                     lLinhas = new ArrayList<>();
                     for(DataSnapshot umDataSnapshot : dataSnapshot.getChildren()) {
                         Linha umaLinha = umDataSnapshot.getValue(Linha.class);

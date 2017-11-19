@@ -106,7 +106,7 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 lMunicipios = new ArrayList<>();
-                if(dataSnapshot == null || dataSnapshot.getChildren() != null) {
+                if(dataSnapshot == null || dataSnapshot.getChildren().iterator().hasNext()) {
                     for (DataSnapshot municipioSnapshot : dataSnapshot.getChildren()) {
                         Municipio municipio = municipioSnapshot.getValue(Municipio.class);
                         municipio.setId(municipioSnapshot.getKey());
