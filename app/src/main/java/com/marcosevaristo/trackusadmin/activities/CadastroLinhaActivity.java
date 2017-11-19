@@ -286,7 +286,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                 }
             }
         } catch (IOException e) {
-            Toast.makeText(App.getAppContext(), App.getAppContext().getString(R.string.nao_achou_municipio_no_mapa, linha.getMunicipio().getNome()), Toast.LENGTH_SHORT).show();
+            App.toast(R.string.nao_achou_municipio_no_mapa, linha.getMunicipio().getNome());
         }
     }
 
