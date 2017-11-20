@@ -7,6 +7,7 @@
     <color name="windowBackground">#C8E6C9</color>
     <color name="colorAccent">#43A047</color>
     <color name="greyButtons">#eeeeee</color>
+    <color name="redButtons">#f44336</color>
 
     <color name="white">#FFFFFF</color>
 

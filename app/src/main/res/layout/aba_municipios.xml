@@ -48,7 +48,7 @@
         android:visibility="invisible"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
-        android:layout_gravity="bottom|end"
+        app:borderWidth="0dp"
         app:fabSize="mini"/>
 
     <include

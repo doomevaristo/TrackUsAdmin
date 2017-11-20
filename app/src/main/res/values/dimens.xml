@@ -12,11 +12,10 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_small_sides_margin">24dp</dimen>
     <dimen name="fab_margin_2">90dp</dimen>
-    <dimen name="fab_margin_3">150dp</dimen>
-    <dimen name="fab_margin_4">210dp</dimen>
-    <dimen name="fab_margin_5">270dp</dimen>
-    <dimen name="fab_margin_6">330dp</dimen>
-    <dimen name="fabDimen">56dp</dimen>
+    <dimen name="fab_margin_3">140dp</dimen>
+    <dimen name="fab_margin_4">190dp</dimen>
+    <dimen name="fab_margin_5">240dp</dimen>
+    <dimen name="fab_margin_6">290dp</dimen>
     <dimen name="search_button_height">48dp</dimen>
     <dimen name="search_button_width">48dp</dimen>
 
