@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.firebase.database.DatabaseReference;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
@@ -50,6 +51,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     private GoogleMap gMap;
 
     private List<Marker> markers;
+    private List<Polyline> lPolylines;
     private ArrayList<LatLng> rota;
     private ProgressDialog progressDialog;
 
@@ -274,7 +276,8 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
             setupLocationsOnMap();
         }
         if(CollectionUtils.isNotEmpty(rota)) {
-            gMap.addPolyline(GoogleMapsUtils.desenhaRota(rota));
+            lPolylines = new ArrayList<>();
+            lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(rota)));
         }
         gMap.setOnMapClickListener(getOnMapClickListenerAddMarker());
     }
@@ -350,7 +353,8 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                                     }
                                     if(CollectionUtils.isEmpty(rota)) rota = new ArrayList<>();
                                     rota.addAll(points);
-                                    gMap.addPolyline(GoogleMapsUtils.desenhaRota(points));
+                                    if(CollectionUtils.isEmpty(lPolylines)) lPolylines = new ArrayList<>();
+                                    lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(points)));
                                     points.clear();
                                     progressDialog.dismiss();
                                 }
@@ -371,10 +375,17 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         if(gMap != null) gMap.clear();
         if(CollectionUtils.isNotEmpty(rota)) rota.clear();
         if(CollectionUtils.isNotEmpty(markers)) markers.clear();
-        if(linha != null && CollectionUtils.isNotEmpty(linha.getRota()));
     }
 
     private void clearLastMarker() {
-        
+        if(CollectionUtils.isNotEmpty(rota)) rota.remove(rota.size()-1);
+        if(CollectionUtils.isNotEmpty(lPolylines)) {
+            lPolylines.get(lPolylines.size()-1).remove();
+            lPolylines.remove(lPolylines.size()-1);
+        }
+        if(CollectionUtils.isNotEmpty(markers)){
+            markers.get(markers.size()-1).remove();
+            markers.remove(markers.size()-1);
+        }
     }
 }
