@@ -16,6 +16,7 @@
     <dimen name="fab_margin_4">190dp</dimen>
     <dimen name="fab_margin_5">240dp</dimen>
     <dimen name="fab_margin_6">290dp</dimen>
+    <dimen name="fab_margin_7">340dp</dimen>
     <dimen name="search_button_height">48dp</dimen>
     <dimen name="search_button_width">48dp</dimen>
 
