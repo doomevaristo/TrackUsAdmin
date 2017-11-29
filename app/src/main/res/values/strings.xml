@@ -1,28 +1,14 @@
 <resources>
     <string name="app_name">TrackUsAdmin</string>
 
-    <string name="abaLinhas">Linhas</string>
     <string name="abaMunicipios">Municipios</string>
-
-    <string name="hintBuscar">Número da linha</string>
     <string name="title_activity_main_menu">MainMenu</string>
-
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-
-    <string name="title_activity_navigation_drawer">NavigationDrawer</string>
 
     <!-- ALERTS -->
     <string name="nenhum_resultado">Não foram encontrados resultados na busca</string>
     <string name="municipio_selecionado_sucesso">O município %1$s foi selecionado com sucesso.</string>
 
     <string name="municipioAtualDet">(atual)</string>
-    <string name="title_activity_drawer">DrawerActivity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="opcoes_group_menu">Opções</string>
-    <string name="alterar_municipio_menu">Alterar município</string>
     <string name="municipio_excluido_sucesso">O município %1$s foi excluído com sucesso.</string>
     <string name="linha_excluida_sucesso">A linha %1$s foi excluída com sucesso.</string>
     <string name="ID">ID do registro</string>
@@ -31,17 +17,24 @@
     <string name="etMunicipioHint">Nome do município</string>
     <string name="titleCadastroMunicipio">Cadastro de município</string>
     <string name="etNumeroLinhaHint">Número</string>
-    <string name="spinner_title">Município</string>
     <string name="textLabelMapaLinha">Rota</string>
     <string name="nao_achou_municipio_no_mapa">Não foi possível encontrar o município %1$s no mapa.</string>
     <string name="carregando">Carregando…</string>
+
     <string name="textLabelFabClearMap">Limpar mapa</string>
     <string name="textLabelFabAdd">Novo</string>
     <string name="textLabelFabClone">Clonar</string>
     <string name="textLabelFabDel">Excluir</string>
     <string name="textLabelFabLinhasMunicipio">Consultar linhas</string>
+
     <string name="municipio_salvo_sucesso">O município %1$s foi salvo com sucesso.</string>
     <string name="linha_salva_sucesso">A linha %1$s foi salva com sucesso.</string>
     <string name="campo_x_obrigatorio">O campo %1$s é obrigatório.</string>
     <string name="campo_obrigatorio">Campo obrigatório.</string>
+
+    <string name="etBuscaLinhaHint">Número da linha</string>
+    <string name="confirm_delete_dialog_title">Confirmação de exclusão</string>
+    <string name="confirm_delete_dialog_content">Você confirma a exclusão deste item?</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
 </resources>

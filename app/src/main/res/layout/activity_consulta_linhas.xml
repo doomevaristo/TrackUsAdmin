@@ -10,6 +10,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/toolbarLayoutConsultaLinhas"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <include
@@ -19,31 +20,31 @@
             android:id="@+id/toolbar_inc"/>
     </android.support.design.widget.AppBarLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBarAbaLinhas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"/>
-
     <ListView
         android:id="@+id/listaLinhas"
-        android:layout_marginTop="@dimen/marginTopComAppBar"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/listItensHeight" />
+        android:layout_below="@id/toolbarLayoutConsultaLinhas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/textLayoutBuscaLinhas"/>
 
-    <EditText
-        android:id="@+id/etBuscaLinhas"
-        android:layout_width="@dimen/etBuscaWidth"
-        android:layout_height="@dimen/etBuscaHeight"
-        android:layout_marginLeft="10dp"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:focusable="true"
-        android:maxLength="30"
-        android:inputType="number"
-        android:hint="@string/hintBuscar"
-        />
+        android:id="@+id/textLayoutBuscaLinhas"
+        android:paddingLeft="@dimen/buscaEtDefaultPadding"
+        android:paddingStart="@dimen/buscaEtDefaultPadding"
+        android:layout_marginRight="@dimen/etBuscaRightMargin"
+        android:layout_marginEnd="@dimen/etBuscaRightMargin"
+        android:visibility="gone">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/etBuscaLinhaHint"
+            android:id="@+id/etBuscaLinhas"/>
+
+    </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_search_linhas"

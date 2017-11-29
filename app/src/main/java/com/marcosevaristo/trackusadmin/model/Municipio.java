@@ -11,6 +11,10 @@ public class Municipio implements Serializable {
     private Map<String, Linha> linhas;
 
     public Municipio(){}
+    public Municipio(String id, String nome){
+        this.id = id;
+        this.nome = nome;
+    }
 
     public String getId() {
         return id;

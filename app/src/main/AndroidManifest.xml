@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -27,8 +25,6 @@
         android:theme="@style/MyAppStyle">
         <activity
             android:name="com.marcosevaristo.trackusadmin.activities.MainActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +38,10 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="com.marcosevaristo.trackusadmin.activities.CadastroLinhaActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            />
         <activity
             android:name="com.marcosevaristo.trackusadmin.activities.CadastroMunicipioActivity"
             android:windowSoftInputMode="adjustResize"/>

@@ -64,7 +64,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/fab_small_sides_margin"
         android:layout_marginEnd="@dimen/fab_small_sides_margin"
-        android:layout_marginBottom="@dimen/fab_margin_6"
+        android:layout_marginBottom="@dimen/fab_margin_5"
         android:visibility="invisible"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"

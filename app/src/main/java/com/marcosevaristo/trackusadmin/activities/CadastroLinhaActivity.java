@@ -1,6 +1,5 @@
 package com.marcosevaristo.trackusadmin.activities;
 
-import android.app.ProgressDialog;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -24,7 +23,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
@@ -43,17 +45,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CadastroLinhaActivity extends AppCompatActivity implements Crud, View.OnClickListener, OnMapReadyCallback {
+public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, View.OnClickListener, OnMapReadyCallback {
     private Boolean isFabOpen = false;
     private TextInputEditText etNumero, etTituloLinha, etSubtituloLinha;
-    private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabUndoLast,fabClr,fabClone;
+    private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabUndoLast,fabClr;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
 
     private List<Marker> markers;
     private List<Polyline> lPolylines;
-    private ArrayList<LatLng> rota;
-    private ProgressDialog progressDialog;
+    private List<ArrayList<LatLng>> rota;
 
     private Municipio municipio;
     private Linha linha;
@@ -62,6 +63,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro_linha);
+        App.showLoadingDialog(this);
         setupToolbar();
         setupFloatingActionButtons();
         Bundle bundle = getIntent().getExtras();
@@ -78,122 +80,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         mapFragment.getMapAsync(this);
     }
 
-    private void setupLinhaNaTela(){
-        if(etNumero == null) etNumero = (TextInputEditText) findViewById(R.id.etNumeroLinha);
-        if(etTituloLinha == null) etTituloLinha = (TextInputEditText) findViewById(R.id.etTituloLinha);
-        if(etSubtituloLinha == null) etSubtituloLinha = (TextInputEditText) findViewById(R.id.etSubtituloLinha);
-
-        etNumero.setText(linha != null ? linha.getNumero() : null);
-        etTituloLinha.setText(linha != null ? linha.getTitulo() : null);
-        etSubtituloLinha.setText(linha != null ? linha.getSubtitulo() : null);
-        if(CollectionUtils.isNotEmpty(linha.getRota())) {
-            rota = (ArrayList<LatLng>) GoogleMapsUtils.getListLatLngFromListString(linha.getRota());
-        } else {
-            clearMap();
-        }
-
-        etNumero.requestFocus();
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-    }
-
-    private void setupFloatingActionButtons() {
-        fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
-        fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
-        fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
-        fabSave = (FloatingActionButton)findViewById(R.id.fab_save);
-        fabUndoLast = (FloatingActionButton)findViewById(R.id.fab_undo_last);
-        fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
-        fabClone = (FloatingActionButton)findViewById(R.id.fab_clone);
-
-        fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_backward);
-
-        fabMenu.setOnClickListener(this);
-        fabAdd.setOnClickListener(this);
-        fabSave.setOnClickListener(this);
-        fabDel.setOnClickListener(this);
-        fabClr.setOnClickListener(this);
-        fabUndoLast.setOnClickListener(this);
-        fabClone.setOnClickListener(this);
-    }
-
-    public void animateFAB(){
-        if(isFabOpen){
-            fabMenu.startAnimation(rotate_backward);
-            fabAdd.startAnimation(fab_close);
-            fabSave.startAnimation(fab_close);
-            fabClr.startAnimation(fab_close);
-            fabUndoLast.startAnimation(fab_close);
-            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
-                fabDel.startAnimation(fab_close);
-                fabClone.startAnimation(fab_close);
-            }
-
-            fabAdd.setClickable(false);
-            fabSave.setClickable(false);
-            fabClr.setClickable(false);
-            fabUndoLast.setClickable(false);
-            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
-                fabDel.setClickable(false);
-                fabClone.setClickable(false);
-            }
-            isFabOpen = false;
-        } else {
-            fabMenu.startAnimation(rotate_forward);
-            fabAdd.startAnimation(fab_open);
-            fabSave.startAnimation(fab_open);
-            fabClr.startAnimation(fab_open);
-            fabUndoLast.startAnimation(fab_open);
-            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
-                fabDel.startAnimation(fab_open);
-                fabClone.startAnimation(fab_open);
-            }
-
-            fabAdd.setClickable(true);
-            fabSave.setClickable(true);
-            fabClr.setClickable(true);
-            fabUndoLast.setClickable(true);
-            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
-                fabDel.setClickable(true);
-                fabClone.setClickable(true);
-            }
-            isFabOpen = true;
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        animateFAB();
-        switch (id){
-            case R.id.fab_menu:
-                break;
-            case R.id.fab_add:
-                novo();
-                break;
-            case R.id.fab_save:
-                salva();
-                break;
-            case R.id.fab_del:
-                exclui();
-                break;
-            case R.id.fab_clear:
-                clearMap();
-                break;
-            case R.id.fab_undo_last:
-                clearLastMarker();
-                break;
-            case R.id.fab_clone:
-                //TODO: clonar
-                break;
-        }
-    }
-
     @Override
     public void novo() {
         linha = new Linha();
@@ -204,7 +90,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
     @Override
     public void edita(Bundle bundle) {
         linha = (Linha) bundle.get("linha");
-        linha.setMunicipio(municipio);
         setupLinhaNaTela();
     }
 
@@ -235,6 +120,140 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         }
     }
 
+    private void setupLinhaNaTela(){
+        if(etNumero == null) etNumero = (TextInputEditText) findViewById(R.id.etNumeroLinha);
+        if(etTituloLinha == null) etTituloLinha = (TextInputEditText) findViewById(R.id.etTituloLinha);
+        if(etSubtituloLinha == null) etSubtituloLinha = (TextInputEditText) findViewById(R.id.etSubtituloLinha);
+
+        etNumero.setText(linha != null ? linha.getNumero() : null);
+        etTituloLinha.setText(linha != null ? linha.getTitulo() : null);
+        etSubtituloLinha.setText(linha != null ? linha.getSubtitulo() : null);
+        etNumero.requestFocus();
+
+        if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+            FirebaseUtils.getLinhasReference(municipio.getId(), linha.getId()).child("rota").addListenerForSingleValueEvent(getEventoBuscaRotaFirebase());
+        } else {
+            App.hideLoadingDialog();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private ValueEventListener getEventoBuscaRotaFirebase() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    rota = new ArrayList<>();
+                    List<String> lRotasStr = new ArrayList<>();
+                    for(DataSnapshot umDataSnapshot : dataSnapshot.getChildren()) {
+                        lRotasStr.add(umDataSnapshot.getValue().toString());
+                    }
+                    rota.add((ArrayList<LatLng>) GoogleMapsUtils.getListLatLngFromListString(lRotasStr));
+                    if(CollectionUtils.isNotEmpty(rota)) {
+                        lPolylines = new ArrayList<>();
+                        lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(rota.get(0))));
+                    }
+                }
+                App.hideLoadingDialog();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                App.hideLoadingDialog();
+            }
+        };
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+    }
+
+    private void setupFloatingActionButtons() {
+        fabMenu = (FloatingActionButton)findViewById(R.id.fab_menu);
+        fabAdd = (FloatingActionButton)findViewById(R.id.fab_add);
+        fabDel = (FloatingActionButton)findViewById(R.id.fab_del);
+        fabSave = (FloatingActionButton)findViewById(R.id.fab_save);
+        fabUndoLast = (FloatingActionButton)findViewById(R.id.fab_undo_last);
+        fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
+
+        fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_backward);
+
+        fabMenu.setOnClickListener(this);
+        fabAdd.setOnClickListener(this);
+        fabSave.setOnClickListener(this);
+        fabDel.setOnClickListener(this);
+        fabClr.setOnClickListener(this);
+        fabUndoLast.setOnClickListener(this);
+    }
+
+    public void animateFAB(){
+        if(isFabOpen){
+            fabMenu.startAnimation(rotate_backward);
+            fabAdd.startAnimation(fab_close);
+            fabSave.startAnimation(fab_close);
+            fabClr.startAnimation(fab_close);
+            fabUndoLast.startAnimation(fab_close);
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.startAnimation(fab_close);
+            }
+
+            fabAdd.setClickable(false);
+            fabSave.setClickable(false);
+            fabClr.setClickable(false);
+            fabUndoLast.setClickable(false);
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.setClickable(false);
+            }
+            isFabOpen = false;
+        } else {
+            fabMenu.startAnimation(rotate_forward);
+            fabAdd.startAnimation(fab_open);
+            fabSave.startAnimation(fab_open);
+            fabClr.startAnimation(fab_open);
+            fabUndoLast.startAnimation(fab_open);
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.startAnimation(fab_open);
+            }
+
+            fabAdd.setClickable(true);
+            fabSave.setClickable(true);
+            fabClr.setClickable(true);
+            fabUndoLast.setClickable(true);
+            if(linha != null && StringUtils.isNotBlank(linha.getId())) {
+                fabDel.setClickable(true);
+            }
+            isFabOpen = true;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        animateFAB();
+        switch (id){
+            case R.id.fab_menu:
+                break;
+            case R.id.fab_add:
+                novo();
+                break;
+            case R.id.fab_save:
+                salva();
+                break;
+            case R.id.fab_del:
+                App.askDeleteConfirmation(this);
+                break;
+            case R.id.fab_clear:
+                clearMap();
+                break;
+            case R.id.fab_undo_last:
+                clearLastMarker();
+                break;
+        }
+    }
+
     private boolean setupTelaNaLinha() {
         if(StringUtils.isNotBlank(etNumero.getText().toString())) {
             linha.setNumero(etNumero.getText().toString());
@@ -253,11 +272,13 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         }
 
         linha.setSubtitulo(etSubtituloLinha.getText().toString());
-        List<String> listLatLgnStr = null;
+        List<String> listLatLgnStr;
         if(CollectionUtils.isNotEmpty(rota)) {
             listLatLgnStr = new ArrayList<>();
-            for (LatLng umLatLng : rota) {
-                listLatLgnStr.add(GoogleMapsUtils.getLatLngToString(umLatLng));
+            for(ArrayList<LatLng> umListLatLng: rota) {
+                for (LatLng umLatLng : umListLatLng) {
+                    listLatLgnStr.add(GoogleMapsUtils.getLatLngToString(umLatLng));
+                }
             }
         } else {
             App.toast(R.string.campo_x_obrigatorio, "Rota");
@@ -277,7 +298,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         }
         if(CollectionUtils.isNotEmpty(rota)) {
             lPolylines = new ArrayList<>();
-            lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(rota)));
+            lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(rota.get(0))));
         }
         gMap.setOnMapClickListener(getOnMapClickListenerAddMarker());
     }
@@ -313,21 +334,19 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                 Marker lastMarker = gMap.addMarker(markerOptions);
                 markers.add(lastMarker);
                 if(CollectionUtils.isNotEmpty(rota) || markers.size() > 1) {
-                    traceRoute(lastMarker);
+                    traceRoute(lastMarker, CollectionUtils.isNotEmpty(rota) ? rota.get(rota.size()-1) : null);
                 }
             }
         };
     }
 
-    private void traceRoute(Marker lastMarker) {
+    private void traceRoute(Marker lastMarker, ArrayList<LatLng> ultimaRotaDesenhada) {
         if(CollectionUtils.isNotEmpty(markers)) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage(App.getAppContext().getString(R.string.carregando));
-            progressDialog.show();
+            App.showLoadingDialog(CadastroLinhaActivity.this);
 
             for(Marker umMarker : markers) {
                 if(umMarker.equals(lastMarker)) {
-                    String srcParam = GoogleMapsUtils.getLatLngToString(CollectionUtils.isNotEmpty(rota) ? rota.get(rota.size()-1) : markers.get(markers.indexOf(umMarker)-1).getPosition());
+                    String srcParam = GoogleMapsUtils.getLatLngToString(CollectionUtils.isNotEmpty(ultimaRotaDesenhada) ? ultimaRotaDesenhada.get(ultimaRotaDesenhada.size()-1) : markers.get(markers.indexOf(umMarker)-1).getPosition());
                     String destParam = GoogleMapsUtils.getLatLngToString(umMarker.getPosition());
                     String urlRequestRoute = GoogleMapsUtils.getUrlSearchRoute(srcParam, destParam);
 
@@ -352,17 +371,17 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
                                         }
                                     }
                                     if(CollectionUtils.isEmpty(rota)) rota = new ArrayList<>();
-                                    rota.addAll(points);
+                                    rota.add(new ArrayList<>(points));
                                     if(CollectionUtils.isEmpty(lPolylines)) lPolylines = new ArrayList<>();
                                     lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(points)));
                                     points.clear();
-                                    progressDialog.dismiss();
+                                    App.hideLoadingDialog();
                                 }
                             },
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
-                                    progressDialog.dismiss();
+                                    App.hideLoadingDialog();
                                 }
                             });
                     App.addToReqQueue(jsonObjectRequest);
@@ -375,6 +394,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements Crud, Vi
         if(gMap != null) gMap.clear();
         if(CollectionUtils.isNotEmpty(rota)) rota.clear();
         if(CollectionUtils.isNotEmpty(markers)) markers.clear();
+        if(CollectionUtils.isNotEmpty(lPolylines)) lPolylines.clear();
     }
 
     private void clearLastMarker() {

@@ -5,19 +5,24 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
@@ -32,13 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ConsultaLinhasActivity extends AppCompatActivity implements View.OnClickListener{
+public class ConsultaLinhasActivity extends AppCompatActivity implements View.OnClickListener, EditText.OnEditorActionListener{
 
     private ListView lView;
     private LinhasAdapter adapter;
     private Municipio municipio;
     private List<Linha> lLinhas;
-    private ProgressBar progressBar;
     private String ultimaBusca = StringUtils.emptyString();
 
     private FloatingActionButton fabMenu,fabAdd,fabSearch;
@@ -59,23 +63,17 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
     }
 
     private void setupComponents(String argBusca) {
-        progressBar = (ProgressBar) findViewById(R.id.progressBarAbaLinhas);
-        progressBar.setVisibility(View.VISIBLE);
+        App.showLoadingDialog(this);
         lView = (ListView) findViewById(R.id.listaLinhas);
         lView.setAdapter(null);
         lView.setOnItemClickListener(getOnItemClickListenerAbreCadastro());
 
         if(municipio != null) {
-            FirebaseUtils.getLinhasReference(municipio.getId(), argBusca).getRef()
-                    .addListenerForSingleValueEvent(getEventoBuscaLinhasFirebase());
-        } else {
-            lLinhas = new ArrayList<>();
-            lLinhas.addAll(municipio.getLinhas().values());
-            for(Linha umaLinha : lLinhas) {
-                umaLinha.setMunicipio(municipio);
+            Query query = FirebaseUtils.getLinhasReference(municipio.getId(), null).orderByChild("numero");
+            if(StringUtils.isNotBlank(argBusca)) {
+                query = query.equalTo(argBusca);
             }
-            setupListAdapter();
-            progressBar.setVisibility(View.GONE);
+            query.addValueEventListener(getEventoBuscaLinhasFirebase());
         }
     }
 
@@ -83,26 +81,28 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null && dataSnapshot.getChildren().iterator().hasNext()) {
+                if(dataSnapshot.exists()) {
                     lLinhas = new ArrayList<>();
                     for(DataSnapshot umDataSnapshot : dataSnapshot.getChildren()) {
-                        Linha umaLinha = umDataSnapshot.getValue(Linha.class);
+                        String id = umDataSnapshot.getKey();
+                        String numero = umDataSnapshot.child("numero").getValue().toString();
+                        String titulo = umDataSnapshot.child("titulo").getValue().toString();
+                        String subtitulo = umDataSnapshot.child("subtitulo").getValue().toString();
+
+                        Linha umaLinha = new Linha(id, numero, titulo, subtitulo);
                         umaLinha.setMunicipio(municipio);
                         lLinhas.add(umaLinha);
                     }
                     setupListAdapter();
-                    progressBar.setVisibility(View.GONE);
-                    return;
                 } else {
                     App.toast(R.string.nenhum_resultado);
                 }
-
-                progressBar.setVisibility(View.GONE);
+                App.hideLoadingDialog();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                progressBar.setVisibility(View.GONE);
+                App.hideLoadingDialog();
             }
         };
     }
@@ -122,7 +122,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
                 bundleAux.putSerializable("linha", (Linha)parent.getItemAtPosition(position));
                 bundleAux.putSerializable("municipio", municipio);
                 intent.putExtras(bundleAux);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         };
     }
@@ -155,23 +155,16 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
                 intent.putExtras(bundleAux);
                 startActivity(intent);
                 break;
-            case R.id.fab_search_municipios:
-                TextView busca = (TextView) findViewById(R.id.etBuscaLinhas);
+            case R.id.fab_search_linhas:
+                TextInputEditText busca = (TextInputEditText) findViewById(R.id.etBuscaLinhas);
                 InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(busca.getVisibility() == View.GONE) {
-                    busca.setVisibility(View.VISIBLE);
-                    busca.requestFocus();
-                    busca.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-                    busca.setTransformationMethod(new NumericKeyBoardTransformationMethod());
-                    busca.setTypeface(Typeface.SANS_SERIF);
-                    imm.showSoftInput(busca, InputMethodManager.SHOW_IMPLICIT);
-                } else {
-                    ultimaBusca = busca.getText().toString();
-                    setupComponents(ultimaBusca);
-                    busca.setText("");
-                    busca.setVisibility(View.GONE);
-                    imm.hideSoftInputFromWindow(busca.getWindowToken(), 0);
-                }
+                ((TextInputLayout)busca.getParent().getParent()).setVisibility(View.VISIBLE);
+                busca.requestFocus();
+                busca.setOnEditorActionListener(this);
+                busca.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                busca.setTransformationMethod(new NumericKeyBoardTransformationMethod());
+                busca.setTypeface(Typeface.SANS_SERIF);
+                imm.showSoftInput(busca, InputMethodManager.SHOW_IMPLICIT);
                 break;
         }
         animateFAB();
@@ -192,15 +185,27 @@ public class ConsultaLinhasActivity extends AppCompatActivity implements View.On
             fabSearch.startAnimation(fab_open);
 
             fabAdd.setClickable(true);
-            fabSearch.setClickable(false);
+            fabSearch.setClickable(true);
 
             isFabOpen = true;
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        setupComponents(ultimaBusca);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            setupComponents(ultimaBusca);
+        }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH
+                || actionId == EditorInfo.IME_ACTION_NEXT
+                || actionId == EditorInfo.IME_ACTION_DONE) {
+            setupComponents(v.getText().toString());
+            return true;
+        }
+        return false;
     }
 }

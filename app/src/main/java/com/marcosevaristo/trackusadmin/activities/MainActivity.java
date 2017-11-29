@@ -46,25 +46,5 @@ public class MainActivity extends AppCompatActivity{
         viewPager.setAdapter(adapter);
 
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.addOnPageChangeListener(getOnPageChangeListener(adapter));
-    }
-
-    private ViewPager.OnPageChangeListener getOnPageChangeListener(final ViewPagerAdapter adapter) {
-        return new ViewPager.OnPageChangeListener(){
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                ((AbaMunicipios) adapter.getItem(position)).atualizaBusca();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        };
     }
 }

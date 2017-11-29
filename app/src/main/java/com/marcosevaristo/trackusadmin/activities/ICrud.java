@@ -3,7 +3,7 @@ package com.marcosevaristo.trackusadmin.activities;
 
 import android.os.Bundle;
 
-public interface Crud {
+public interface ICrud {
 
     void novo();
     void edita(Bundle bundle);
