@@ -1,15 +1,19 @@
 package com.marcosevaristo.trackusadmin.activities;
 
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -49,6 +53,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
     private Boolean isFabOpen = false;
     private TextInputEditText etNumero, etTituloLinha, etSubtituloLinha;
     private FloatingActionButton fabMenu,fabAdd,fabSave,fabDel,fabUndoLast,fabClr;
+    private TextView labelFabAdd, labelFabSave, labelFabDel, labelFabUndoLast, labelFabClear;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private GoogleMap gMap;
 
@@ -84,6 +89,7 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
     public void novo() {
         linha = new Linha();
         linha.setMunicipio(municipio);
+        clearMap();
         setupLinhaNaTela();
     }
 
@@ -176,6 +182,12 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
         fabUndoLast = (FloatingActionButton)findViewById(R.id.fab_undo_last);
         fabClr = (FloatingActionButton)findViewById(R.id.fab_clear);
 
+        labelFabAdd = (TextView) findViewById(R.id.labelFabAdd);
+        labelFabSave = (TextView) findViewById(R.id.labelFabSave);
+        labelFabDel = (TextView) findViewById(R.id.labelFabDel);
+        labelFabUndoLast = (TextView) findViewById(R.id.labelFabUndoLast);
+        labelFabClear = (TextView) findViewById(R.id.labelFabClear);
+
         fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.rotate_forward);
@@ -187,43 +199,83 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
         fabDel.setOnClickListener(this);
         fabClr.setOnClickListener(this);
         fabUndoLast.setOnClickListener(this);
+
+        labelFabAdd.setOnClickListener(this);
+        labelFabSave.setOnClickListener(this);
+        labelFabDel.setOnClickListener(this);
+        labelFabUndoLast.setOnClickListener(this);
+        labelFabClear.setOnClickListener(this);
     }
 
     public void animateFAB(){
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
+
             fabAdd.startAnimation(fab_close);
+            labelFabAdd.startAnimation(fab_close);
+
             fabSave.startAnimation(fab_close);
+            labelFabSave.startAnimation(fab_close);
+
             fabClr.startAnimation(fab_close);
+            labelFabClear.startAnimation(fab_close);
+
             fabUndoLast.startAnimation(fab_close);
+            labelFabUndoLast.startAnimation(fab_close);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.startAnimation(fab_close);
+                labelFabDel.startAnimation(fab_close);
             }
 
             fabAdd.setClickable(false);
+            labelFabAdd.setClickable(false);
+
             fabSave.setClickable(false);
+            labelFabSave.setClickable(false);
+
             fabClr.setClickable(false);
+            labelFabClear.setClickable(false);
+
             fabUndoLast.setClickable(false);
+            labelFabUndoLast.setClickable(false);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.setClickable(false);
+                labelFabDel.setClickable(false);
             }
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
+
             fabAdd.startAnimation(fab_open);
+            labelFabAdd.startAnimation(fab_open);
+
             fabSave.startAnimation(fab_open);
+            labelFabSave.startAnimation(fab_open);
+
             fabClr.startAnimation(fab_open);
+            labelFabClear.startAnimation(fab_open);
+
             fabUndoLast.startAnimation(fab_open);
+            labelFabUndoLast.startAnimation(fab_open);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.startAnimation(fab_open);
+                labelFabDel.startAnimation(fab_open);
             }
 
             fabAdd.setClickable(true);
+            labelFabAdd.setClickable(true);
+
             fabSave.setClickable(true);
+            labelFabSave.setClickable(true);
+
             fabClr.setClickable(true);
+            labelFabClear.setClickable(true);
+
             fabUndoLast.setClickable(true);
+            labelFabUndoLast.setClickable(true);
             if(linha != null && StringUtils.isNotBlank(linha.getId())) {
                 fabDel.setClickable(true);
+                labelFabDel.setClickable(true);
             }
             isFabOpen = true;
         }
@@ -237,18 +289,36 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
             case R.id.fab_menu:
                 break;
             case R.id.fab_add:
+            case R.id.labelFabAdd:
                 novo();
                 break;
             case R.id.fab_save:
+            case R.id.labelFabSave:
                 salva();
                 break;
             case R.id.fab_del:
-                App.askDeleteConfirmation(this);
+            case R.id.labelFabDel:
+                new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialog))
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.confirm_delete_dialog_title)
+                        .setMessage(R.string.confirm_delete_dialog_content)
+                        .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                exclui();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.nao, null)
+                        .show();
                 break;
             case R.id.fab_clear:
+            case R.id.labelFabClear:
                 clearMap();
                 break;
             case R.id.fab_undo_last:
+            case R.id.labelFabUndoLast:
                 clearLastMarker();
                 break;
         }

@@ -2,6 +2,7 @@
     <string name="app_name">TrackUsAdmin</string>
 
     <string name="abaMunicipios">Municipios</string>
+    <string name="abaLinhas">Linhas</string>
     <string name="title_activity_main_menu">MainMenu</string>
 
     <!-- ALERTS -->
@@ -22,8 +23,9 @@
     <string name="carregando">Carregando…</string>
 
     <string name="textLabelFabClearMap">Limpar mapa</string>
+    <string name="textLabelFabUndoLast">Remover última alteração no mapa</string>
     <string name="textLabelFabAdd">Novo</string>
-    <string name="textLabelFabClone">Clonar</string>
+    <string name="textLabelFabSave">Salvar</string>
     <string name="textLabelFabDel">Excluir</string>
     <string name="textLabelFabLinhasMunicipio">Consultar linhas</string>
 
@@ -37,4 +39,5 @@
     <string name="confirm_delete_dialog_content">Você confirma a exclusão deste item?</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
+    <string name="textLabelFabSearch">Pesquisar</string>
 </resources>

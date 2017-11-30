@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -56,19 +57,6 @@ public class App extends Application {
     }
 
     public static void askDeleteConfirmation(final ICrud crud) {
-        new AlertDialog.Builder(App.getAppContext())
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(R.string.confirm_delete_dialog_title)
-                .setMessage(R.string.confirm_delete_dialog_content)
-                .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        crud.exclui();
-                    }
 
-                })
-                .setNegativeButton(R.string.nao, null)
-                .show();
     }
 }

@@ -38,43 +38,175 @@
     <!-- END NOME -->
 
     <!-- START FAB -->
-
-    <TextView
-        android:id="@+id/label_fab_linhas_municipio"
-        android:layout_toLeftOf="@+id/fab_linhas_municipio"
-        android:layout_toStartOf="@+id/fab_linhas_municipio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:text="@string/textLabelFabLinhasMunicipio"
-        android:textSize="@dimen/textDefaultSize"
-        android:layout_marginBottom="@dimen/fab_margin_6"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:visibility="invisible" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_linhas_municipio"
-        android:src="@drawable/ic_list_black_24dp"
-        android:backgroundTint="@color/greyButtons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="@dimen/fab_small_sides_margin"
-        android:layout_marginEnd="@dimen/fab_small_sides_margin"
-        android:layout_marginBottom="@dimen/fab_margin_5"
-        android:visibility="invisible"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:borderWidth="0dp"
-        app:fabSize="mini"/>
-
-    <include
-        layout="@layout/floating_action_button"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:id="@+id/fab_list_linhas_layout"
         android:layout_width="match_parent"
-        android:id="@+id/floating_action_buttons"/>
+        android:layout_height="@dimen/fab_layout_height"
+        android:layout_above="@id/fab_del_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/labelFabListLinhas"
+            android:text="@string/textLabelFabLinhasMunicipio"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_label_sides_margin"
+            android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:visibility="invisible"
+            android:textSize="@dimen/textSmall"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_linhas_municipio"
+            android:src="@drawable/ic_list_black_24dp"
+            android:backgroundTint="@color/greyButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/fab_small_sides_margin"
+            android:layout_marginEnd="@dimen/fab_small_sides_margin"
+            android:visibility="invisible"
+            app:elevation="@dimen/fab_elevation"
+            app:pressedTranslationZ="12dp"
+            app:borderWidth="0dp"
+            app:fabSize="mini"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fab_del_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fab_layout_height"
+        android:layout_above="@id/fab_save_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/labelFabDel"
+            android:text="@string/textLabelFabDel"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_label_sides_margin"
+            android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:visibility="invisible"
+            android:textSize="@dimen/textSmall"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_del"
+            android:src="@drawable/ic_delete_black_24dp"
+            android:backgroundTint="@color/redButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/fab_small_sides_margin"
+            android:layout_marginEnd="@dimen/fab_small_sides_margin"
+            android:visibility="invisible"
+            app:elevation="@dimen/fab_elevation"
+            app:pressedTranslationZ="12dp"
+            app:borderWidth="0dp"
+            app:fabSize="mini"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fab_save_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fab_layout_height"
+        android:layout_above="@id/fab_add_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/labelFabSave"
+            android:text="@string/textLabelFabSave"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_label_sides_margin"
+            android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:visibility="invisible"
+            android:textSize="@dimen/textSmall"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_save"
+            android:src="@drawable/ic_save_black_24dp"
+            android:backgroundTint="@color/greyButtons"
+            app:borderWidth="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_small_sides_margin"
+            android:layout_marginEnd="@dimen/fab_small_sides_margin"
+            android:visibility="invisible"
+            app:elevation="@dimen/fab_elevation"
+            app:pressedTranslationZ="12dp"
+            app:fabSize="mini"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fab_add_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fab_layout_height"
+        android:layout_above="@id/fab_menu_layout"
+        android:layout_marginBottom="@dimen/fab_layout_first_margin_bottom">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/labelFabAdd"
+            android:text="@string/textLabelFabAdd"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_label_sides_margin"
+            android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:visibility="invisible"
+            android:textSize="@dimen/textSmall"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add"
+            android:src="@drawable/ic_add_black_24dp"
+            android:backgroundTint="@color/greyButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/fab_small_sides_margin"
+            android:layout_marginRight="@dimen/fab_small_sides_margin"
+            android:visibility="invisible"
+            app:elevation="@dimen/fab_elevation"
+            app:pressedTranslationZ="12dp"
+            app:borderWidth="0dp"
+            app:fabSize="mini"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fab_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fab_menu_layout_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/fab_margin">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_menu"
+            android:src="@drawable/ic_add_black_24dp"
+            android:tint="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            app:elevation="@dimen/fab_elevation"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+    </RelativeLayout>
     <!-- END FAB -->
 </RelativeLayout>

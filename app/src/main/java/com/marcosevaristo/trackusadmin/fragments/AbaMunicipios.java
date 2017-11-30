@@ -11,7 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +33,9 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
     private View view;
     private ListView lMunicipiosView;
     private List<Municipio> lMunicipios;
+
     private FloatingActionButton fabMenu,fabAdd;
+    private TextView labelFabAdd;
     private Animation fab_open,fab_close,rotate_forward,rotate_backward;
     private Boolean isFabOpen = false;
 
@@ -56,6 +58,7 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
     private void setupFloatingActionButtons() {
         fabMenu = (FloatingActionButton) view.findViewById(R.id.fab_menu);
         fabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
+        labelFabAdd = (TextView) view.findViewById(R.id.labelFabAdd);
 
         fab_open = AnimationUtils.loadAnimation(App.getAppContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(App.getAppContext(),R.anim.fab_close);
@@ -64,9 +67,10 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
 
         fabMenu.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
+        labelFabAdd.setOnClickListener(this);
     }
 
-    private void setupListMunicipios(String argBusca) {
+    public void setupListMunicipios(String argBusca) {
         App.showLoadingDialog(getActivity());
 
         lMunicipiosView = (ListView) view.findViewById(R.id.listaMunicipiosBuscados);
@@ -77,7 +81,7 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
         if(StringUtils.isNotBlank(argBusca)) {
             query = query.orderByChild("nome").startAt(argBusca);
         }
-        query.addListenerForSingleValueEvent(getEventoBuscaMunicipiosFirebase());
+        query.addValueEventListener(getEventoBuscaMunicipiosFirebase());
     }
 
     private AdapterView.OnItemClickListener getOnItemClickListenerAbreCadastro() {
@@ -107,10 +111,10 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
                         String nome = municipioSnapshot.child("nome").getValue().toString();
                         lMunicipios.add(new Municipio(id, nome));
                     }
-                    setupListAdapter();
                 } else {
                     App.toast(R.string.nenhum_resultado);
                 }
+                setupListAdapter();
                 App.hideLoadingDialog();
             }
 
@@ -135,6 +139,7 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
             case R.id.fab_menu:
                 break;
             case R.id.fab_add:
+            case R.id.labelFabAdd:
                 startActivity(new Intent(App.getAppContext(), CadastroMunicipioActivity.class));
                 break;
         }
@@ -145,12 +150,18 @@ public class AbaMunicipios extends Fragment implements View.OnClickListener{
         if(isFabOpen){
             fabMenu.startAnimation(rotate_backward);
             fabAdd.startAnimation(fab_close);
+            labelFabAdd.startAnimation(fab_close);
+
             fabAdd.setClickable(false);
+            labelFabAdd.setClickable(false);
             isFabOpen = false;
         } else {
             fabMenu.startAnimation(rotate_forward);
             fabAdd.startAnimation(fab_open);
+            labelFabAdd.startAnimation(fab_open);
+
             fabAdd.setClickable(true);
+            labelFabAdd.setClickable(true);
             isFabOpen = true;
         }
     }
