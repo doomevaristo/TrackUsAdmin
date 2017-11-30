@@ -48,6 +48,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -85,8 +87,10 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
-            android:visibility="invisible"
-            android:textSize="@dimen/textSmall"/>
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
+            android:textSize="@dimen/textSmall"
+            android:visibility="invisible"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add"

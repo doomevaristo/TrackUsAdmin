@@ -113,9 +113,10 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
-            android:textSize="@dimen/textSmall"
-            android:background="@color/white"/>
+            android:textSize="@dimen/textSmall"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_del"
@@ -152,6 +153,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -188,6 +191,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -224,6 +229,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -275,6 +282,8 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/fab_small_sides_margin"
             android:layout_marginRight="@dimen/fab_small_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             app:elevation="@dimen/fab_elevation"
             app:pressedTranslationZ="12dp"

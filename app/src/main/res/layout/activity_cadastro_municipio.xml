@@ -54,6 +54,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -91,6 +93,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -128,6 +132,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -166,6 +172,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 

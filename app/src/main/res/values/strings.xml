@@ -28,6 +28,7 @@
     <string name="textLabelFabSave">Salvar</string>
     <string name="textLabelFabDel">Excluir</string>
     <string name="textLabelFabLinhasMunicipio">Consultar linhas</string>
+    <string name="textLabelFabSearch">Pesquisar</string>
 
     <string name="municipio_salvo_sucesso">O município %1$s foi salvo com sucesso.</string>
     <string name="linha_salva_sucesso">A linha %1$s foi salva com sucesso.</string>
@@ -39,5 +40,4 @@
     <string name="confirm_delete_dialog_content">Você confirma a exclusão deste item?</string>
     <string name="sim">Sim</string>
     <string name="nao">Não</string>
-    <string name="textLabelFabSearch">Pesquisar</string>
 </resources>
