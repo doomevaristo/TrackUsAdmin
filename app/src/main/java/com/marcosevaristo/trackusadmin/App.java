@@ -52,11 +52,7 @@ public class App extends Application {
 
     public static void hideLoadingDialog() {
         if(progressDialog != null) {
-            progressDialog.hide();
+            progressDialog.dismiss();
         }
-    }
-
-    public static void askDeleteConfirmation(final ICrud crud) {
-
     }
 }

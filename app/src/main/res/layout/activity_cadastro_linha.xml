@@ -256,7 +256,8 @@
         android:id="@+id/fab_add_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/fab_layout_height"
-        android:layout_above="@id/fab_menu_layout">
+        android:layout_above="@id/fab_menu_layout"
+        android:layout_marginBottom="@dimen/fab_layout_first_margin_bottom">
 
         <TextView
             android:layout_width="wrap_content"
@@ -268,6 +269,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginRight="@dimen/fab_label_sides_margin"
             android:layout_marginEnd="@dimen/fab_label_sides_margin"
+            android:padding="@dimen/fabLabelDefaultPadding"
+            android:background="@drawable/rectangle"
             android:visibility="invisible"
             android:textSize="@dimen/textSmall"/>
 
@@ -282,8 +285,6 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/fab_small_sides_margin"
             android:layout_marginRight="@dimen/fab_small_sides_margin"
-            android:padding="@dimen/fabLabelDefaultPadding"
-            android:background="@drawable/rectangle"
             android:visibility="invisible"
             app:elevation="@dimen/fab_elevation"
             app:pressedTranslationZ="12dp"

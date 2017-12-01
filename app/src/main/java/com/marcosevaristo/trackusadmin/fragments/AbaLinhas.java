@@ -84,6 +84,8 @@ public class AbaLinhas extends Fragment implements View.OnClickListener , EditTe
                 query = query.equalTo(argBusca);
             }
             query.addValueEventListener(getEventoBuscaLinhasFirebase());
+        } else {
+            App.hideLoadingDialog();
         }
     }
 

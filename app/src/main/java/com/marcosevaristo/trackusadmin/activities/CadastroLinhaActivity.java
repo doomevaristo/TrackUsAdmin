@@ -426,7 +426,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
                                 public void onResponse(JSONObject response) {
                                     MapDirectionsParser parser = new MapDirectionsParser();
                                     List<List<HashMap<String, String>>> routes = parser.parse(response);
-                                    LatLng position = null;
                                     ArrayList<LatLng> points = new ArrayList<>();
                                     for (int i = 0; i < routes.size(); i++) {
                                         List<HashMap<String, String>> path = routes.get(i);
@@ -435,16 +434,14 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
 
                                             double lat = Double.parseDouble(point.get("lat"));
                                             double lng = Double.parseDouble(point.get("lng"));
-                                            position = new LatLng(lat, lng);
 
-                                            points.add(position);
+                                            points.add(new LatLng(lat, lng));
                                         }
                                     }
                                     if(CollectionUtils.isEmpty(rota)) rota = new ArrayList<>();
                                     rota.add(new ArrayList<>(points));
                                     if(CollectionUtils.isEmpty(lPolylines)) lPolylines = new ArrayList<>();
                                     lPolylines.add(gMap.addPolyline(GoogleMapsUtils.desenhaRota(points)));
-                                    points.clear();
                                     App.hideLoadingDialog();
                                 }
                             },
