@@ -43,7 +43,6 @@ import java.util.List;
 public class AbaLinhas extends Fragment implements View.OnClickListener , EditText.OnEditorActionListener{
     private View view;
     private ListView lView;
-    private LinhasAdapter adapter;
     private Municipio municipio;
     private List<Linha> lLinhas;
 
@@ -120,7 +119,7 @@ public class AbaLinhas extends Fragment implements View.OnClickListener , EditTe
     }
 
     private void setupListAdapter() {
-        adapter = new LinhasAdapter(R.layout.linha_item, lLinhas);
+        LinhasAdapter adapter = new LinhasAdapter(R.layout.linha_item, lLinhas);
         adapter.notifyDataSetChanged();
         lView.setAdapter(adapter);
     }
@@ -174,7 +173,7 @@ public class AbaLinhas extends Fragment implements View.OnClickListener , EditTe
                 startActivity(intent);
                 break;
             case R.id.fab_search_linhas:
-            //case R.id.labelFabSearchLinhas:
+            case R.id.labelFabSearchLinhas:
                 TextInputEditText busca = (TextInputEditText) view.findViewById(R.id.etBuscaLinhas);
                 InputMethodManager imm = (InputMethodManager) App.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 ((TextInputLayout)busca.getParent().getParent()).setVisibility(View.VISIBLE);
