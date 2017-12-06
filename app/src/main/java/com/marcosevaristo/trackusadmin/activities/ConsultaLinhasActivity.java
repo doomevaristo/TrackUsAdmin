@@ -1,46 +1,15 @@
 package com.marcosevaristo.trackusadmin.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.marcosevaristo.trackusadmin.App;
 import com.marcosevaristo.trackusadmin.R;
-import com.marcosevaristo.trackusadmin.adapters.LinhasAdapter;
-import com.marcosevaristo.trackusadmin.adapters.NumericKeyBoardTransformationMethod;
 import com.marcosevaristo.trackusadmin.adapters.ViewPagerAdapter;
-import com.marcosevaristo.trackusadmin.database.firebase.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.fragments.AbaLinhas;
-import com.marcosevaristo.trackusadmin.fragments.AbaMunicipios;
-import com.marcosevaristo.trackusadmin.model.Linha;
 import com.marcosevaristo.trackusadmin.model.Municipio;
-import com.marcosevaristo.trackusadmin.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ConsultaLinhasActivity extends AppCompatActivity{

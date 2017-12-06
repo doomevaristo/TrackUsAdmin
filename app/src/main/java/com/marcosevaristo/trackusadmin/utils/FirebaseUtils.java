@@ -1,4 +1,4 @@
-package com.marcosevaristo.trackusadmin.database.firebase;
+package com.marcosevaristo.trackusadmin.utils;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

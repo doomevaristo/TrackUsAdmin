@@ -1,18 +1,15 @@
-package com.marcosevaristo.trackusadmin;
+package com.marcosevaristo.trackusadmin.app;
 
 import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.marcosevaristo.trackusadmin.activities.ICrud;
+import com.marcosevaristo.trackusadmin.R;
 
 public class App extends Application {
     private static Context context;
