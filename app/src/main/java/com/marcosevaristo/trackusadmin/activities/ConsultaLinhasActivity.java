@@ -14,7 +14,6 @@ import com.marcosevaristo.trackusadmin.model.Municipio;
 
 public class ConsultaLinhasActivity extends AppCompatActivity{
 
-    private ViewPagerAdapter viewPagerAdapter;
     private Municipio municipio;
 
     @Override
@@ -39,7 +38,7 @@ public class ConsultaLinhasActivity extends AppCompatActivity{
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         AbaLinhas abaLinhas = new AbaLinhas();
         Bundle arguments = new Bundle();
         arguments.putSerializable("municipio", municipio);

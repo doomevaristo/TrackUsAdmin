@@ -15,8 +15,6 @@ import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 public class MainActivity extends AppCompatActivity{
 
-    private ViewPagerAdapter viewPagerAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +33,7 @@ public class MainActivity extends AppCompatActivity{
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(new AbaMunicipios(), getString(R.string.abaMunicipios));
         viewPager.setAdapter(viewPagerAdapter);
 
