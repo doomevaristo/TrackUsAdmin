@@ -1,7 +1,5 @@
 package com.marcosevaristo.trackusadmin.activities;
 
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -11,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.adapters.ViewPagerAdapter;
 import com.marcosevaristo.trackusadmin.fragments.AbaMunicipios;
-import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 public class MainActivity extends AppCompatActivity{
 

@@ -26,14 +26,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.marcosevaristo.trackusadmin.app.App;
 import com.marcosevaristo.trackusadmin.R;
 import com.marcosevaristo.trackusadmin.activities.CadastroLinhaActivity;
 import com.marcosevaristo.trackusadmin.adapters.LinhasAdapter;
 import com.marcosevaristo.trackusadmin.adapters.NumericKeyBoardTransformationMethod;
-import com.marcosevaristo.trackusadmin.utils.FirebaseUtils;
+import com.marcosevaristo.trackusadmin.app.App;
 import com.marcosevaristo.trackusadmin.model.Linha;
 import com.marcosevaristo.trackusadmin.model.Municipio;
+import com.marcosevaristo.trackusadmin.utils.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
 
 import java.util.ArrayList;

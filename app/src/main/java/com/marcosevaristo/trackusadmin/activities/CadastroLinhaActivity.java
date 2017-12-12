@@ -31,12 +31,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.marcosevaristo.trackusadmin.app.App;
 import com.marcosevaristo.trackusadmin.R;
-import com.marcosevaristo.trackusadmin.utils.FirebaseUtils;
+import com.marcosevaristo.trackusadmin.app.App;
 import com.marcosevaristo.trackusadmin.model.Linha;
 import com.marcosevaristo.trackusadmin.model.Municipio;
 import com.marcosevaristo.trackusadmin.utils.CollectionUtils;
+import com.marcosevaristo.trackusadmin.utils.FirebaseUtils;
 import com.marcosevaristo.trackusadmin.utils.GoogleMapsUtils;
 import com.marcosevaristo.trackusadmin.utils.MapDirectionsParser;
 import com.marcosevaristo.trackusadmin.utils.StringUtils;
@@ -393,7 +393,6 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
 
     private GoogleMap.OnMapClickListener getOnMapClickListenerAddMarker() {
         return new GoogleMap.OnMapClickListener() {
-
             @Override
             public void onMapClick(LatLng point) {
                 MarkerOptions markerOptions = new MarkerOptions().position(point);
@@ -416,7 +415,8 @@ public class CadastroLinhaActivity extends AppCompatActivity implements ICrud, V
 
             for(Marker umMarker : markers) {
                 if(umMarker.equals(lastMarker)) {
-                    String srcParam = GoogleMapsUtils.getLatLngToString(CollectionUtils.isNotEmpty(ultimaRotaDesenhada) ? ultimaRotaDesenhada.get(ultimaRotaDesenhada.size()-1) : markers.get(markers.indexOf(umMarker)-1).getPosition());
+                    String srcParam = GoogleMapsUtils.getLatLngToString(CollectionUtils.isNotEmpty(ultimaRotaDesenhada) ?
+                            ultimaRotaDesenhada.get(ultimaRotaDesenhada.size()-1) : markers.get(markers.indexOf(umMarker)-1).getPosition());
                     String destParam = GoogleMapsUtils.getLatLngToString(umMarker.getPosition());
                     String urlRequestRoute = GoogleMapsUtils.getUrlSearchRoute(srcParam, destParam);
 
